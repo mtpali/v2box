@@ -58,3 +58,36 @@ jobs:
           name: V2BOX-1-arm64-v8a
           path: V2rayNG/app/build/outputs/apk/playstore/debug/*arm64-v8a*.apk
           if-no-files-found: error
+
+  publish-preview:
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[publish preview]')
+    needs: android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: V2BOX-1-armeabi-v7a
+          path: dist/armeabi-v7a
+      - uses: actions/download-artifact@v4
+        with:
+          name: V2BOX-1-arm64-v8a
+          path: dist/arm64-v8a
+      - name: Publish directly downloadable preview APKs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp dist/armeabi-v7a/*.apk dist/V2BOX-1-armeabi-v7a.apk
+          cp dist/arm64-v8a/*.apk dist/V2BOX-1-arm64-v8a.apk
+          (cd dist && sha256sum V2BOX-1-*.apk > SHA256SUMS)
+          gh release create v1-preview \
+            dist/V2BOX-1-armeabi-v7a.apk \
+            dist/V2BOX-1-arm64-v8a.apk \
+            dist/SHA256SUMS \
+            --title 'V2BOX 1 preview' \
+            --notes 'ARMv7 and ARMv8 debug-signed preview APKs. An existing installation signed with another key may need to be uninstalled first.' \
+            --prerelease \
+            --latest=false \
+            --target "$GITHUB_SHA"
