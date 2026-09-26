@@ -8,7 +8,18 @@ V2BOX Android VPN client based on v2rayNG 2.2.6.
 - Package name: com.v2box.mobiletina
 - Application version: 1
 
-## Planned Changes
+## Migration Progress
+
+### Repository Preparation
+- Target repository initialized.
+- Development tracking document created.
+- GitHub Actions Android build workflow added.
+
+### Source Migration
+- Base source: v2rayNG 2.2.6.
+- Reference migration source: mtpali/v2rayNG.
+- Reference feature source: mtpali/MobileTinaVPN.
+- Smart Connect implementation source identified for integration.
 
 ### Branding
 - Replace original v2rayNG branding with V2BOX branding.
@@ -45,8 +56,8 @@ V2BOX Android VPN client based on v2rayNG 2.2.6.
 - Display remaining traffic and expiration time when available.
 
 ### Build
-- Add GitHub Actions Android build workflow.
-- Generate ARMv7 and ARMv8 APK outputs.
+- GitHub Actions build workflow prepared.
+- ARMv7 and ARMv8 APK output configuration prepared.
 
 ## References
 - Base project: v2rayNG 2.2.6
@@ -55,5 +66,5 @@ V2BOX Android VPN client based on v2rayNG 2.2.6.
   - mtpali/MobileTinaVPN
 
 ## Current Stage
-- Target repository initialized.
-- Development migration pending.
+- Migration workspace prepared.
+- Source integration in progress.
