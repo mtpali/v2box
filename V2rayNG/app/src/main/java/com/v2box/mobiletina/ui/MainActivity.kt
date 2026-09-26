@@ -151,7 +151,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         val socialLabel = getString(R.string.v2box_instagram_prefix) + " " +
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.tvInstagram.text = if (SettingsManager.getLocale().language == "fa")
-            getString(R.string.v2box_drawer_instagram) else socialLabel
+            getString(R.string.v2box_home_instagram) else socialLabel
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.navView.menu.findItem(R.id.promotion)?.title = getString(R.string.v2box_drawer_instagram)
@@ -247,6 +247,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
     private fun updateConnectButtonLabel() {
         binding.btnConnect.setText(if (binding.switchSmart.isChecked) R.string.v2box_smart_button else R.string.v2box_connect)
+        binding.btnConnect.contentDescription = binding.btnConnect.text
     }
 
     private fun setupViewModel() {
@@ -458,7 +459,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             key = AppConfig.MSG_MEASURE_CONFIG_START, serverGuids = guids
         ))
         smartConnectJob = lifecycleScope.launch {
-            binding.btnConnect.setText(R.string.v2box_choosing)
+            binding.btnConnect.setText(R.string.v2box_choosing_button)
+            binding.btnConnect.setContentDescription(R.string.v2box_choosing)
             var started = false
             try {
                 var firstPositiveAt = 0L

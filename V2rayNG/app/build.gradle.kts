@@ -42,11 +42,30 @@ android {
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "TRUSTED_SIGNER_SHA256", "\"\"")
+    }
+
+    signingConfigs {
+        create("preview") {
+            System.getenv("V2BOX_SIGNING_STORE_FILE")?.takeIf { it.isNotBlank() }?.let {
+                storeFile = file(it)
+                storePassword = System.getenv("V2BOX_SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("V2BOX_SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("V2BOX_SIGNING_KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("preview")
+            val trustedSignerSha256 = providers.gradleProperty("TRUSTED_SIGNER_SHA256").orNull.orEmpty()
+            require(trustedSignerSha256.isEmpty() || trustedSignerSha256.matches(Regex("[a-fA-F0-9]{64}"))) {
+                "TRUSTED_SIGNER_SHA256 must be the SHA-256 fingerprint of the APK signing certificate"
+            }
+            buildConfigField("String", "TRUSTED_SIGNER_SHA256", "\"$trustedSignerSha256\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Gson reads and writes configs, subscriptions, and profiles by field name.
+# Preserve serialized field names while allowing R8 to rename classes.
+-keepclassmembers class com.v2box.mobiletina.dto.** {
+    <fields>;
+}
+-keepattributes Signature,InnerClasses,EnclosingMethod

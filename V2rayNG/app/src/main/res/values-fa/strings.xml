@@ -11,6 +11,7 @@
     <string name="v2box_connect">اتصال</string>
     <string name="v2box_disconnect">قطع اتصال</string>
     <string name="v2box_choosing">در حال انتخاب بهترین سرور… برای لغو لمس کنید</string>
+    <string name="v2box_choosing_button">در حال اتصال…</string>
     <string name="v2box_smart_connect">اتصال هوشمند</string>
     <string name="v2box_smart_summary">بررسی سرورها و انتخاب سریع‌ترین سرور فعال</string>
     <string name="v2box_smart_unavailable">سرور فعالی پیدا نشد. کانفیگ اضافه یا بررسی کنید.</string>
@@ -18,6 +19,7 @@
     <string name="v2box_sub_update_summary">اشتراک‌های فعال را هنگام باز شدن V2BOX به‌روز کن</string>
     <string name="v2box_subscription_details">مانده اشتراک</string>
     <string name="v2box_instagram">اینستاگرام</string>
+    <string name="v2box_home_instagram">موبایل تینا</string>
     <string name="v2box_smart_button">اتصال هوشمند</string>
     <string name="v2box_sort_ping">مرتب‌سازی</string>
     <string name="v2box_subscription_heading">اطلاعات اشتراک</string>
@@ -385,7 +387,7 @@
     <string name="connection_test_pending">اتصال را بررسی کنید</string>
     <string name="connection_test_testing">در حال اتصال...</string>
     <string name="connection_test_testing_count">تست کردن %d کانفیگ…</string>
-    <string name="connection_test_available">موفقیت: اتصال %dms طول کشید</string>
+    <string name="connection_test_available">پینگ : %dms</string>
     <string name="connection_test_error">اتصال به اینترنت شناسایی نشد: %s</string>
     <string name="connection_test_fail">اینترنت در دسترس نیست</string>
     <string name="connection_test_error_status_code">کد خطا: #%d</string>

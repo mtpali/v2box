@@ -12,6 +12,7 @@
     <string name="v2box_connect">Connect</string>
     <string name="v2box_disconnect">Disconnect</string>
     <string name="v2box_choosing">Finding the best server… Tap to cancel</string>
+    <string name="v2box_choosing_button">Connecting…</string>
     <string name="v2box_smart_connect">Smart Connect</string>
     <string name="v2box_smart_summary">Test available configs and use the fastest working server</string>
     <string name="v2box_smart_unavailable">No working server found. Test or add a config.</string>
@@ -19,7 +20,8 @@
     <string name="v2box_sub_update_summary">Update enabled subscriptions when V2BOX opens</string>
     <string name="v2box_subscription_details">Subscription balance</string>
     <string name="v2box_instagram">Instagram</string>
-    <string name="v2box_smart_button">Smart-Connect</string>
+    <string name="v2box_home_instagram">Instagram</string>
+    <string name="v2box_smart_button">Smart Connect</string>
     <string name="v2box_sort_ping">sort by ping</string>
     <string name="v2box_subscription_heading">instagram : mobile.tina2</string>
     <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
