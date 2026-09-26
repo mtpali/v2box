@@ -3,11 +3,10 @@
 ## راهنمای دانلود در GitHub
 
 1. برای گرفتن همین فایل، در صفحهٔ [V2BOX_DEVELOPMENT_STATUS.md](https://github.com/mtpali/v2box/blob/main/V2BOX_DEVELOPMENT_STATUS.md) روی دکمهٔ **Download raw file** (علامت پیکان رو به پایین کنار **Raw**) بزنید.
-2. برای APK به صفحهٔ [اجرای موفق ساخت در GitHub Actions](https://github.com/mtpali/v2box/actions/runs/36221357502) بروید و اگر لازم شد به حساب GitHub وارد شوید.
-3. پایین صفحه، بخش **Artifacts** را باز کنید. برای گوشی‌های جدیدتر روی **V2BOX-1-arm64-v8a** و برای دستگاه‌های ARMv7 روی **V2BOX-1-armeabi-v7a** بزنید.
-4. GitHub فایل را به شکل ZIP می‌دهد؛ فایل ZIP را باز کنید و APK داخل آن را استخراج و نصب کنید.
+2. برای APK در صفحهٔ مخزن، **Releases** را باز کنید و وارد [V2BOX 1 preview](https://github.com/mtpali/v2box/releases/tag/v1-preview) شوید.
+3. در بخش **Assets**، برای بیشتر گوشی‌های جدید فایل **V2BOX-1-arm64-v8a.apk** و برای دستگاه‌های ARMv7 فایل **V2BOX-1-armeabi-v7a.apk** را انتخاب کنید. این فایل‌ها APK هستند و نیازی به استخراج ZIP ندارند.
 
-اگر در مخزن بخش **Releases** و نسخهٔ **V2BOX 1 preview** را می‌بینید، می‌توانید به جای ZIP از بخش **Assets** همان نسخه، APK مناسب پردازندهٔ گوشی را بردارید.
+راه جایگزین: در [اجرای موفق GitHub Actions](https://github.com/mtpali/v2box/actions/runs/36222227077)، پایین صفحه زیر **Artifacts** فایل متناظر را بگیرید. برای دریافت Artifacts باید وارد حساب GitHub شوید؛ فایل به شکل ZIP دانلود می‌شود و APK درون آن است.
 
 ## Source and repository
 
@@ -45,4 +44,4 @@
 - The identical source tree on `main` also passed the full APK and metadata checks: [main run 36221357502](https://github.com/mtpali/v2box/actions/runs/36221357502).
 - The previously uploaded `icon.png` and ten UI screenshots are not available as files in this Codex workspace. A centered V2BOX vector placeholder avoids showing the upstream icon; replace it with the exact supplied image once it is attached here. Pixel alignment with the screenshot references is therefore not verified.
 - Home upload/download numbers use Android app UID counters from the current connection session. These include app network traffic and are an approximation of tunnel usage; provider traffic quota uses subscription headers.
-- Actions artifacts are debug signed and currently expire on 2026-12-25; rerun the workflow to regenerate them. A persistent release keystore is needed for APKs that can upgrade across runs without reinstalling.
+- The APKs are available in the public [V2BOX 1 preview release](https://github.com/mtpali/v2box/releases/tag/v1-preview), together with `SHA256SUMS`. This release was built and verified in [main run 36222227077](https://github.com/mtpali/v2box/actions/runs/36222227077). Actions artifacts for that run expire on 2026-12-25, but the release assets provide persistent downloads. Both APKs are debug signed; a persistent release keystore is needed for upgrades across runs without reinstalling.
