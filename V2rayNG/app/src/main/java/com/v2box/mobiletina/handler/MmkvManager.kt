@@ -40,6 +40,8 @@ object MmkvManager {
     private val assetStorage by lazy { MMKV.mmkvWithID(ID_ASSET, MMKV.MULTI_PROCESS_MODE) }
     private val settingsStorage by lazy { MMKV.mmkvWithID(ID_SETTING, MMKV.MULTI_PROCESS_MODE) }
 
+    fun hasSetting(key: String): Boolean = settingsStorage.containsKey(key)
+
     //endregion
 
     //region Server
@@ -127,6 +129,18 @@ object MmkvManager {
         }
 
         return allServers
+    }
+
+    /** Sort every group after a completed ping batch, even if the UI is no longer visible. */
+    fun sortServerListsByPing() {
+        (decodeSubsList() + DEFAULT_SUBSCRIPTION_ID).distinct().forEach { subId ->
+            val servers = decodeServerList(subId)
+            servers.sortWith(compareBy { guid ->
+                decodeServerAffiliationInfo(guid)?.testDelayMillis
+                    ?.takeIf { it > 0L } ?: Long.MAX_VALUE
+            })
+            encodeServerList(servers, subId)
+        }
     }
 
 

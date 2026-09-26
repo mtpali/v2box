@@ -35,6 +35,7 @@
 
         <CheckBoxPreference
             android:key="pref_start_scan_immediate"
+            android:defaultValue="true"
             android:summary="@string/summary_pref_start_scan_immediate"
             android:title="@string/title_pref_start_scan_immediate" />
 
@@ -300,11 +301,6 @@
 
 
     <PreferenceCategory android:title="@string/title_advanced">
-
-        <Preference
-            android:key="pref_subscription_info"
-            android:selectable="false"
-            android:title="@string/v2box_subscription_details" />
 
         <CheckBoxPreference
             android:key="pref_is_booted"

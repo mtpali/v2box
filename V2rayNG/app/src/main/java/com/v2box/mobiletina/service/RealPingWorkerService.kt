@@ -45,8 +45,10 @@ class RealPingWorkerService(
                 try {
                     val result = startRealPing(guid)
                     onEvent(RealPingEvent.Result(guid, result))
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (_: Throwable) {
-                    // ignore
+                    onEvent(RealPingEvent.Result(guid, -1L))
                 } finally {
                     val count = totalCount.decrementAndGet()
                     val left = runningCount.decrementAndGet()

@@ -199,23 +199,11 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
      * @param position The position in the list
      */
     private fun removeServer(guid: String, position: Int) {
-        if (guid == MmkvManager.getSelectServer()) {
-            ownerActivity.toast(R.string.toast_action_not_allowed)
-            return
-        }
-
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_CONFIRM_REMOVE)) {
-            AlertDialog.Builder(ownerActivity).setMessage(R.string.del_config_comfirm)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    removeServerSub(guid, position)
-                }
-                .setNegativeButton(android.R.string.cancel) { _, _ ->
-                    //do noting
-                }
-                .show()
-        } else {
-            removeServerSub(guid, position)
-        }
+        // Always confirm, including for the selected or last remaining server.
+        AlertDialog.Builder(ownerActivity).setMessage(R.string.del_config_comfirm)
+            .setPositiveButton(android.R.string.ok) { _, _ -> removeServerSub(guid, position) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     /**
@@ -224,9 +212,13 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
      * @param position The position in the list
      */
     private fun removeServerSub(guid: String, position: Int) {
+        if (guid == MmkvManager.getSelectServer() && mainViewModel.isRunning.value == true) {
+            com.v2box.mobiletina.core.CoreServiceManager.stopVService(ownerActivity)
+        }
         mainViewModel.removeServer(guid)
         adapter.removeServerSub(guid, position)
         ownerActivity.refreshGroupTabTitles()
+        ownerActivity.refreshSelectedServer()
     }
 
     /**

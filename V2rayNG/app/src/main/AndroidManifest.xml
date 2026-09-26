@@ -98,9 +98,6 @@
             android:name=".ui.ScannerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.LogcatActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.RoutingSettingActivity"
             android:exported="false" />
         <activity
@@ -161,9 +158,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.CheckUpdateActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.BackupActivity"
             android:exported="false" />
         <activity
@@ -215,12 +209,7 @@
         <service
             android:name=".service.CoreTestService"
             android:exported="false"
-            android:foregroundServiceType="specialUse"
-            android:process=":RunSoLibV2RayDaemon">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="test" />
-        </service>
+            android:process=":RunSoLibV2RayDaemon" />
 
         <receiver
             android:name=".receiver.WidgetProvider"

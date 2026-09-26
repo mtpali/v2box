@@ -1,53 +1,36 @@
 package com.v2box.mobiletina.ui
 
 import android.os.Bundle
-import com.v2box.mobiletina.AppConfig
-import com.v2box.mobiletina.BuildConfig
+import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.v2box.mobiletina.R
-import com.v2box.mobiletina.core.CoreNativeManager
-import com.v2box.mobiletina.databinding.ActivityAboutBinding
+import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.Utils
-import com.v2box.mobiletina.util.InstagramLink
 
-class AboutActivity : BaseActivity() {
-    private val binding by lazy { ActivityAboutBinding.inflate(layoutInflater) }
-
+/** Store and social page from MobileTinaVPN, with its original links and locations. */
+class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(binding.root)
-        setContentViewWithToolbar(binding.root, showHomeAsUp = true, title = getString(R.string.title_about))
+        setContentView(R.layout.activity_about)
 
-        binding.layoutSoureCcode.setOnClickListener {
-            Utils.openUri(this, AppConfig.APP_URL)
+        findViewById<Toolbar>(R.id.a0).setNavigationOnClickListener { finish() }
+        findViewById<TextView>(R.id.b0).text = SocialVault.a(8)
+        findViewById<TextView>(R.id.b1).text = SocialVault.a(4)
+        findViewById<TextView>(R.id.b2).text = SocialVault.a(5)
+        findViewById<TextView>(R.id.b3).text = SocialVault.a(6)
+        findViewById<TextView>(R.id.b4).text = SocialVault.a(7)
+
+        (0..3).forEach { index ->
+            val id = intArrayOf(R.id.a1, R.id.a2, R.id.a3, R.id.a4)[index]
+            findViewById<View>(id).setOnClickListener { Utils.openUri(this, SocialVault.a(index)) }
         }
-
-        binding.layoutFeedback.setOnClickListener {
-            Utils.openUri(this, AppConfig.APP_ISSUES_URL)
-        }
-
-        binding.layoutOssLicenses.setOnClickListener {
+        findViewById<View>(R.id.about_licenses).setOnClickListener {
             val webView = android.webkit.WebView(this)
             webView.loadUrl("file:///android_asset/open_source_licenses.html")
-            android.app.AlertDialog.Builder(this)
-                .setTitle("Open source licenses")
-                .setView(webView)
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                .show()
-        }
-
-        binding.layoutTgChannel.setOnClickListener {
-            InstagramLink.open(this)
-        }
-
-        binding.layoutPrivacyPolicy.setOnClickListener {
-            Utils.openUri(this, AppConfig.APP_PRIVACY_POLICY)
-        }
-
-        "v${BuildConfig.VERSION_NAME} (${CoreNativeManager.getLibVersion()})".also {
-            binding.tvVersion.text = it
-        }
-        BuildConfig.APPLICATION_ID.also {
-            binding.tvAppId.text = it
+            android.app.AlertDialog.Builder(this).setTitle(R.string.title_oss_license)
+                .setView(webView).setPositiveButton(android.R.string.ok, null).show()
         }
     }
 }
