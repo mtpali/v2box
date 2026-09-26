@@ -21,7 +21,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -120,7 +119,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.fab.setOnClickListener { handleFabAction() }
         binding.btnConnect.setOnClickListener { handleFabAction() }
         binding.layoutTest.setOnClickListener { handleLayoutTestClick() }
-        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)
+        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)
         binding.switchSmart.setOnCheckedChangeListener { _, enabled ->
             MmkvManager.encodeSettings(AppConfig.PREF_SMART_CONNECT, enabled)
             binding.switchSmartSettings.isChecked = enabled
@@ -151,7 +150,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.btnInstagram.setOnClickListener { InstagramLink.open(this) }
         val socialLabel = getString(R.string.v2box_instagram_prefix) + " " +
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
-        binding.tvInstagram.text = socialLabel
+        binding.tvInstagram.text = if (SettingsManager.getLocale().language == "fa")
+            getString(R.string.v2box_drawer_instagram) else socialLabel
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.navView.menu.findItem(R.id.promotion)?.title = getString(R.string.v2box_drawer_instagram)
@@ -271,7 +271,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         tabMediator?.detach()
         tabMediator = TabLayoutMediator(binding.tabGroup, binding.viewPager) { tab, position ->
             groupPagerAdapter.groups.getOrNull(position)?.let {
-                tab.text = it.remarks
+                tab.text = displayGroupRemarks(it)
                 tab.tag = it.id
             }
         }.also { it.attach() }
@@ -290,7 +290,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             val card = LayoutV2boxGroupCardBinding.inflate(layoutInflater, binding.groupCards, false)
             val count = if (group.id.isEmpty()) MmkvManager.decodeAllServerList().size
                 else MmkvManager.decodeServerList(group.id).size
-            card.groupTitle.text = "${group.remarks} ($count)"
+            card.groupTitle.text = "${displayGroupRemarks(group)} ($count)"
             card.groupIcon.text = if (group.id == AppConfig.DEFAULT_SUBSCRIPTION_ID) "⌄" else "↻"
             val sub = MmkvManager.decodeSubscription(group.id)
             val details = mutableListOf<String>()
@@ -338,16 +338,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
+    private fun displayGroupRemarks(group: GroupMapItem): String =
+        if (group.remarks.equals("mobile.tina", ignoreCase = true))
+            getString(R.string.v2box_subscription_heading) else group.remarks
+
     private fun showSubscriptionActions(group: GroupMapItem) {
         val sub = MmkvManager.decodeSubscription(group.id) ?: return
         val actions = arrayOf(getString(R.string.v2box_edit_subscription),
             getString(R.string.v2box_share_subscription), getString(R.string.v2box_delete_subscription))
-        AlertDialog.Builder(this).setTitle(group.remarks).setItems(actions) { _, which ->
+        AlertDialog.Builder(this).setTitle(displayGroupRemarks(group)).setItems(actions) { _, which ->
             when (which) {
                 0 -> requestActivityLauncher.launch(Intent(this, SubEditActivity::class.java)
                     .putExtra("subId", group.id))
-                1 -> showSubscriptionShare(group.remarks, sub.url)
-                2 -> AlertDialog.Builder(this).setTitle(group.remarks)
+                1 -> showSubscriptionShare(displayGroupRemarks(group), sub.url)
+                2 -> AlertDialog.Builder(this).setTitle(displayGroupRemarks(group))
                     .setMessage(R.string.v2box_delete_subscription_confirm)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         val selected = MmkvManager.getSelectServer()
@@ -397,7 +401,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             val tabIndex = groupPagerAdapter.groups.indexOfFirst { it.id == group.id }
             if (tabIndex >= 0) {
                 val count = MmkvManager.decodeServerList(group.id).size
-                binding.tabGroup.getTabAt(tabIndex)?.text = "${group.remarks} ($count)"
+                binding.tabGroup.getTabAt(tabIndex)?.text = "${displayGroupRemarks(group)} ($count)"
             }
         }
         renderGroupCards(groupPagerAdapter.groups)
@@ -411,7 +415,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         if (mainViewModel.isRunning.value == true) {
             CoreServiceManager.stopVService(this)
-        } else if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)) {
+        } else if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)) {
             smartConnectAndStart()
         } else {
             startSelectedServer()
@@ -551,6 +555,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             binding.tvHomeStatus.setText(R.string.connection_connected)
             binding.fab.setImageResource(R.drawable.ic_stop_24dp)
             binding.fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
+            binding.btnConnect.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
+            binding.btnConnect.setTextColor(ContextCompat.getColor(this, R.color.v2box_connected_text))
             binding.fab.contentDescription = getString(R.string.action_stop_service)
             setTestState(getString(R.string.connection_connected))
             binding.layoutTest.isFocusable = true
@@ -561,6 +567,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             binding.tvHomeStatus.setText(R.string.connection_not_connected)
             binding.fab.setImageResource(R.drawable.ic_play_24dp)
             binding.fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_inactive))
+            binding.btnConnect.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.v2box_control))
+            binding.btnConnect.setTextColor(ContextCompat.getColor(this, R.color.v2box_text))
             binding.fab.contentDescription = getString(R.string.tasker_start_service)
             setTestState(getString(R.string.connection_not_connected))
             binding.layoutTest.isFocusable = false
@@ -570,7 +578,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     override fun onResume() {
         super.onResume()
         refreshSelectedServer()
-        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)
+        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)
         binding.switchAutoSort.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, true)
         binding.switchSubUpdate.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SUB_UPDATE_ON_START, true)
         refreshSubscriptionInfo()
@@ -634,7 +642,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         val selected = MmkvManager.getSelectServer()?.let { MmkvManager.decodeServerConfig(it) }
         binding.tvSelectedServer.text = selected?.remarks?.takeIf { it.isNotBlank() }
             ?: getString(R.string.v2box_no_server)
-        binding.tvSelectedServer.isVisible = selected != null
+        binding.tvSelectedServer.isVisible = selected != null && SettingsManager.getLocale().language != "fa"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -646,23 +654,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val searchItem = menu.findItem(R.id.search_view)
-        if (searchItem != null) {
-            val searchView = searchItem.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    mainViewModel.filterConfig(newText.orEmpty())
-                    return false
-                }
-            })
-
-            searchView.setOnCloseListener {
-                mainViewModel.filterConfig("")
-                false
-            }
-        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -752,11 +743,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             true
         }
 
-        R.id.service_restart -> {
-            restartV2Ray()
-            true
-        }
-
         R.id.del_all_config -> {
             delAllConfig()
             true
@@ -779,11 +765,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
         R.id.sub_update -> {
             importConfigViaSub()
-            true
-        }
-
-        R.id.locate_selected_config -> {
-            locateSelectedServer()
             true
         }
 

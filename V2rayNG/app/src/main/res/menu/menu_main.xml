@@ -2,17 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/locate_selected_config"
-        android:title="@string/title_locate_selected_config"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/search_view"
-        android:icon="@drawable/ic_outline_filter_alt_24"
-        android:title="@string/menu_item_search"
-        app:iconTint="@color/v2box_accent"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="never" />
-    <item
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/menu_item_add_config"
         app:iconTint="@color/v2box_accent"
@@ -79,10 +68,6 @@
         android:title="@string/v2box_menu"
         app:iconTint="@color/v2box_accent"
         app:showAsAction="always|withText" />
-    <item
-        android:id="@+id/service_restart"
-        android:title="@string/title_service_restart"
-        app:showAsAction="never" />
     <item
         android:id="@+id/del_all_config"
         android:icon="@drawable/ic_delete_24dp"

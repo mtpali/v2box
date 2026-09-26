@@ -119,56 +119,69 @@
             android:orientation="horizontal">
             <FrameLayout
                 android:id="@+id/layout_edit"
-                android:layout_width="42dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="2dp"
-                android:background="@drawable/v2box_action_chip_primary"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@string/menu_item_edit_config">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_edit_24dp"
-                    app:tint="@android:color/white" />
+                    android:background="@drawable/v2box_action_chip_primary">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        app:srcCompat="@drawable/ic_edit_24dp"
+                        app:tint="@android:color/white" />
+                </FrameLayout>
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/layout_share"
-                android:layout_width="42dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="2dp"
-                android:background="@drawable/v2box_action_chip"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@string/title_configuration_share">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_share_24dp"
-                    app:tint="@color/v2box_text" />
+                    android:background="@drawable/v2box_action_chip">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        app:srcCompat="@drawable/ic_share_24dp"
+                        app:tint="@color/v2box_text" />
+                </FrameLayout>
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/layout_remove"
-                android:layout_width="42dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/v2box_action_chip"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@string/menu_item_del_config">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_delete_24dp"
-                    app:tint="@color/v2box_text" />
+                    android:background="@drawable/v2box_action_chip">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        app:srcCompat="@drawable/ic_delete_24dp"
+                        app:tint="@color/v2box_text" />
+                </FrameLayout>
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/layout_more"

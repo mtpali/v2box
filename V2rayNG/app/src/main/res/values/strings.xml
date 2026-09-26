@@ -20,7 +20,10 @@
     <string name="v2box_subscription_details">Subscription balance</string>
     <string name="v2box_instagram">Instagram</string>
     <string name="v2box_smart_button">Smart-Connect</string>
-    <string name="v2box_sort_ping">SORT BY:  Ping</string>
+    <string name="v2box_sort_ping">sort by ping</string>
+    <string name="v2box_subscription_heading">instagram : mobile.tina2</string>
+    <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
+    <string name="v2box_about_settings">instagram : mobile.tina2</string>
     <string name="v2box_quick_settings">QUICK SETTINGS</string>
     <string name="v2box_device">DEVICE</string>
     <string name="v2box_device_id">Device ID</string>
@@ -399,11 +402,11 @@
     <string name="connection_test_pending">Check Connectivity</string>
     <string name="connection_test_testing">Testing…</string>
     <string name="connection_test_testing_count">Testing %d configs…</string>
-    <string name="connection_test_available">Success: Connection took %dms</string>
+    <string name="connection_test_available">Success , ping : %dms</string>
     <string name="connection_test_error">Fail to detect internet connection: %s</string>
     <string name="connection_test_fail">Internet Unavailable</string>
     <string name="connection_test_error_status_code">Error code: #%d</string>
-    <string name="connection_connected">Connected, tap to check connection</string>
+    <string name="connection_connected">Connected : tap to check</string>
     <string name="connection_not_connected">Not connected</string>
     <string name="connection_runing_task_left">Number of running test tasks: %s</string>
 

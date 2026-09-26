@@ -2,25 +2,23 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/v2box_quick_settings">
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="pref_smart_connect_enabled"
-            android:summary="@string/v2box_smart_summary"
-            android:title="@string/v2box_smart_connect" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="pref_smart_connect_enabled"
+        android:summary="@string/v2box_smart_summary"
+        android:title="@string/v2box_smart_connect" />
 
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="pref_auto_sort_after_test"
-            android:summary="@string/summary_pref_auto_sort_after_test"
-            android:title="@string/title_pref_auto_sort_after_test" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="pref_auto_sort_after_test"
+        android:summary="@string/summary_pref_auto_sort_after_test"
+        android:title="@string/title_pref_auto_sort_after_test" />
 
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="pref_sub_update_on_start"
-            android:summary="@string/v2box_sub_update_summary"
-            android:title="@string/v2box_sub_update_on_start" />
-    </PreferenceCategory>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="pref_sub_update_on_start"
+        android:summary="@string/v2box_sub_update_summary"
+        android:title="@string/v2box_sub_update_on_start" />
 
     <PreferenceCategory android:title="@string/title_ui_settings">
         <CheckBoxPreference
@@ -58,7 +56,7 @@
             android:title="@string/title_language" />
 
         <ListPreference
-            android:defaultValue="2"
+            android:defaultValue="0"
             android:entries="@array/ui_mode_night"
             android:entryValues="@array/ui_mode_night_value"
             android:key="pref_ui_mode_night"

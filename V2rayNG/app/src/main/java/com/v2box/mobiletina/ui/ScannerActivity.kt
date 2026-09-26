@@ -25,7 +25,7 @@ class ScannerActivity : HelperBaseActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentViewWithToolbar(binding.root, showHomeAsUp = true, title = getString(R.string.menu_item_import_config_qrcode))
+        setContentViewWithToolbar(binding.root, showHomeAsUp = true, title = getString(R.string.v2box_scanner_hint))
 
         if (MmkvManager.decodeSettingsBool(AppConfig.PREF_START_SCAN_IMMEDIATE, true)) {
             launchScan()
@@ -39,6 +39,7 @@ class ScannerActivity : HelperBaseActivity() {
                 setShowTorchToggle(true) // show or hide (default) torch/flashlight toggle button
                 setShowCloseButton(true) // show or hide (default) close button
                 setBarcodeFormats(listOf(BarcodeFormat.QR_CODE))
+                setOverlayStringRes(R.string.v2box_scanner_hint)
             }
         )
     }

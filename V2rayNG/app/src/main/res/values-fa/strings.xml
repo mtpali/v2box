@@ -2,7 +2,7 @@
 <resources>
     <string name="v2box_home">خانه</string>
     <string name="v2box_configs">کانفیگ‌ها</string>
-    <string name="v2box_local">محلی</string>
+    <string name="v2box_local">موبایل تینا</string>
     <string name="v2box_home_title">V2BOX</string>
     <string name="v2box_no_server">کانفیگی انتخاب نشده است</string>
     <string name="v2box_duration">مدت اتصال</string>
@@ -19,7 +19,10 @@
     <string name="v2box_subscription_details">مانده اشتراک</string>
     <string name="v2box_instagram">اینستاگرام</string>
     <string name="v2box_smart_button">اتصال هوشمند</string>
-    <string name="v2box_sort_ping">مرتب‌سازی: پینگ</string>
+    <string name="v2box_sort_ping">مرتب‌سازی</string>
+    <string name="v2box_subscription_heading">اطلاعات اشتراک</string>
+    <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
+    <string name="v2box_about_settings">موبایل تینا</string>
     <string name="v2box_quick_settings">تنظیمات سریع</string>
     <string name="v2box_device">دستگاه</string>
     <string name="v2box_device_id">شناسهٔ دستگاه</string>
@@ -380,13 +383,13 @@
     <string name="routing_settings_outbound_tag">برچسب خروجی</string>
 
     <string name="connection_test_pending">اتصال را بررسی کنید</string>
-    <string name="connection_test_testing">در حال آزمایش...</string>
+    <string name="connection_test_testing">در حال اتصال...</string>
     <string name="connection_test_testing_count">تست کردن %d کانفیگ…</string>
     <string name="connection_test_available">موفقیت: اتصال %dms طول کشید</string>
     <string name="connection_test_error">اتصال به اینترنت شناسایی نشد: %s</string>
     <string name="connection_test_fail">اینترنت در دسترس نیست</string>
     <string name="connection_test_error_status_code">کد خطا: #%d</string>
-    <string name="connection_connected">متصل است، برای بررسی اتصال ضربه بزنید</string>
+    <string name="connection_connected">متصل است</string>
     <string name="connection_not_connected">متصل نیست</string>
     <string name="connection_runing_task_left">تعداد وظایف آزمایشی در حال اجرا: %s</string>
 
