@@ -55,7 +55,7 @@
             android:layout_width="42dp"
             android:layout_height="48dp"
             android:padding="10dp"
-            android:src="@drawable/ic_v2box_clock"
+            android:src="@drawable/ic_v2box_speed"
             android:clickable="true"
             android:focusable="true"
             android:contentDescription="@string/title_real_ping_all_server"

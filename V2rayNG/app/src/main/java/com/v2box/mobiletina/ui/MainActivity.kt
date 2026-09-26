@@ -17,7 +17,6 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -230,15 +229,9 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun setupNavigationDrawer() {
-        val toggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            binding.toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+        binding.toolbar.setNavigationIcon(R.drawable.ic_scan_24dp)
+        binding.toolbar.navigationIcon?.setTint(ContextCompat.getColor(this, R.color.v2box_accent))
+        binding.toolbar.setNavigationOnClickListener { importQRcode() }
         binding.navView.setNavigationItemSelectedListener(this)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -620,6 +613,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.open_drawer -> {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+            true
+        }
         R.id.import_qrcode -> {
             importQRcode()
             true
