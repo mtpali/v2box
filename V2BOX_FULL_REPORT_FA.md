@@ -1,71 +1,59 @@
-# گزارش کامل کارهای انجام‌شده برای V2BOX
+# گزارش کامل توسعهٔ V2BOX تا ۲۶ سپتامبر ۲۰۲۶
 
-**تاریخ:** ۲۶ سپتامبر ۲۰۲۶  
-**مخزن:** [mtpali/v2box](https://github.com/mtpali/v2box)  
-**وضعیت فعلی:** کد در شاخهٔ `main` ادغام شده، ساخت اندروید موفق است و دو APK آزمایشی در GitHub Releases منتشر شده‌اند.
+**مخزن:** [mtpali/v2box](https://github.com/mtpali/v2box)
 
-## نتیجهٔ خواسته‌ها
+**نسخهٔ برنامه:** `1`؛ شناسهٔ بسته: `com.v2box.mobiletina`
+**وضعیت این بازبینی:** کد رابط تصویری در شاخهٔ `main` ثبت شده، هر دو APK ساخته و در [Release جدید `v1-preview-ui`](https://github.com/mtpali/v2box/releases/tag/v1-preview-ui) منتشر شده‌اند.
 
-| موضوع | وضعیت |
+## کارهای انجام‌شده
+
+1. سورس `2dust/v2rayNG` نسخهٔ `2.2.6` با تاریخچه و مجوز GPL وارد شد. برای رفتار اتصال و اشتراک از `mtpali/MobileTinaVPN` و برای روش ساخت از `mtpali/v2rayNG` استفاده شد؛ فایل اجرایی این مراجع در برنامه قرار نگرفت.
+2. نام نمایشی `V2BOX`، package و namespace برابر `com.v2box.mobiletina`، `versionCode=1` و `versionName=1` تنظیم شد. منابع برنامه به انگلیسی و فارسی محدود و جهت کلی پنجره LTR شد.
+3. سه صفحهٔ **Home، Configs و Settings** و ناوبری ثابت پایین ساخته شدند. Home وضعیت و زمان اتصال، ارسال/دریافت، Smart Connect، Routing و پیوند اینستاگرام `mobile.tina2` را نشان می‌دهد.
+4. Smart Connect از سرویس واقعی اندازه‌گیری پینگ استفاده می‌کند؛ کمترین مقدار مثبت را انتخاب می‌کند، تا ۲۵ ثانیه منتظر می‌ماند و قابل لغو است. اگر خاموش باشد، همان سرور انتخاب‌شده متصل می‌شود. پس از پایان انتخاب، سنجش لغو می‌شود.
+5. مرتب‌سازی خودکار پس از پینگ و به‌روزرسانی اشتراک هنگام ورود به‌صورت پیش‌فرض فعال شدند. کلیدهای **Smart Connect، Auto Sort و Update Subscription** در ابتدای Settings قرار گرفتند. Root Mode و LAN Sharing از تنظیمات نمایشی برداشته شدند؛ Sniffing به‌طور پیش‌فرض خاموش است.
+6. هدر `subscription-userinfo` از پاسخ موفق سرویس‌دهنده خوانده می‌شود. مقدارهای upload، download، total و expire ذخیره می‌شوند؛ حجم باقی‌مانده، تاریخ انقضا و روزهای باقی‌مانده فقط وقتی سرویس‌دهنده این اطلاعات را بدهد نشان داده می‌شوند. در صورت چند اشتراک، اشتراک سرور انتخاب‌شده یا گروه باز ترجیح دارد؛ محاسبهٔ باقیمانده در برابر سرریز محافظت شده است.
+7. تصویر ارسالی کاربر، **شش اسکرین‌شات Android، سه اسکرین‌شات iOS و آیکون PNG**، بازیابی و بررسی شدند. رنگ‌ها و ساختار صفحهٔ Android بر اساس زمینهٔ مشکی، کارت‌های خاکستری تیره، انتخاب فیروزه‌ای و داک اتصال پایین بازسازی شدند. حالت روشن با زمینهٔ خاکستری بسیار روشن و کارت سفید از تصاویر iOS الهام گرفت. حالت تاریک پیش‌فرض است و کاربر می‌تواند حالت روشن را انتخاب کند.
+8. Home با عنوان بزرگ V2BOX و کارت اطلاعات، Configs با سربرگ QR/ستاره/افزودن/منو، کارت‌های عمودی Local و Subscription، نوار حجم و روزهای باقی‌مانده، و ردیف‌های سرور با برچسب پروتکل، نشان پینگ و عمل‌های ویرایش/اشتراک‌گذاری/حذف پیاده شد. Settings با دسته‌های دارای آیکون، ردیف Device ID قابل کپی و کلیدهای سریع بازطراحی شد. دکمهٔ مرتب‌سازی و پینگ از صفحهٔ Configs قابل اجرا هستند.
+9. فایل `icon.png` ارسالی **بدون تغییر محتوا** در منابع برنامه جایگزین آیکون موقت شد. هش SHA-256 آن و فایل داخل سورس یکسان است: `18f026ca534470782b31a7cd66deda32564a33810d3f0cd7f1defbdcb9bf50be`.
+10. پیوند `mobile.tina2` ابتدا با برنامهٔ Instagram و سپس با نشانی وب باز می‌شود؛ About و منوی کناری هم به آن اشاره می‌کنند.
+11. GitHub Actions با Java 21، Android SDK/NDK، ساخت hev tunnel، کتابخانهٔ Xray ثابت‌شده و Gradle برای هر دو ABI آماده شد. تأیید `aapt` شناسهٔ بسته و نسخه، و تأیید `unzip` کتابخانهٔ بومی ویژهٔ هر ABI را بررسی می‌کنند. فایل `SHA256SUMS` در نسخهٔ منتشرشده تولید می‌شود.
+12. توسعهٔ پایه با [PR شمارهٔ ۱](https://github.com/mtpali/v2box/pull/1) در `main` ادغام شد. برای رفع خرابی لینک‌های موقت، APKهای نسخهٔ قبلی در [Release عمومی `v1-preview`](https://github.com/mtpali/v2box/releases/tag/v1-preview) منتشر شدند. بازطراحی تصویری در کامیت‌های [`4e9d3c9`](https://github.com/mtpali/v2box/commit/4e9d3c9c5820489467c04bccb4ce3752a9b25766) و [`6f70f6a`](https://github.com/mtpali/v2box/commit/6f70f6a37972f1bec888f11f9ab1031af953f0c1) ثبت شده است.
+
+## آزمون و وضعیت ساخت
+
+- تمام XMLهای منابع بدون خطای ساختاری خوانده شدند، ارجاع‌های تازهٔ رنگ/رشته/آیکون بررسی شدند و `git diff --check` موفق بود.
+- [ساخت پایهٔ قبلی](https://github.com/mtpali/v2box/actions/runs/36222227077) موفق و APKهای قبلی در `v1-preview` منتشر شده بودند.
+- [ساخت اول بازطراحی](https://github.com/mtpali/v2box/actions/runs/36236193837) خطای `resource style/V2Box not found` داشت؛ نام style اصلاح شد. [ساخت بازبینی دوم](https://github.com/mtpali/v2box/actions/runs/36236411082) با نتیجهٔ `success` پایان یافت: Gradle هر دو معماری را ساخت، `aapt` بسته و نسخه را بررسی کرد، کتابخانهٔ native ABI درست بررسی شد و Release منتشر شد.
+- در این محیط شبیه‌ساز/دستگاه Android در دسترس نیست. همسانی پیکسلی خروجی اجرایی و عملکرد اتصال روی دستگاه هنوز آزموده نشده است.
+
+## مسیرهای مهم سورس
+
+| مسیر | نقش |
 | --- | --- |
-| پایه | سورس `2dust/v2rayNG` تگ `2.2.6` وارد شد؛ تاریخچه و مجوز GPL حفظ شد. |
-| هویت برنامه | نام `V2BOX`، بسته و namespace برابر `com.v2box.mobiletina`، `versionCode=1` و `versionName=1`. |
-| زبان و جهت | انگلیسی و فارسی؛ جهت کلی پنجره LTR و پشتیبانی RTL اندروید غیرفعال. |
-| ظاهر | صفحهٔ Home، Configs و Settings با ناوبری پایین و تم روشن و تاریک؛ آیکون برداری V2BOX موقت. |
-| اتصال | Smart Connect اختیاری با انتخاب کمترین پینگ مثبت؛ در حالت خاموش اتصال به کانفیگ انتخاب‌شده. |
-| اشتراک‌ها | مرتب‌سازی پس از پینگ، بررسی خودکار هنگام ورود و نمایش حجم و انقضا در صورت ارسال اطلاعات از سرور. |
-| خروجی | APKهای جداگانهٔ ARMv7 و ARMv8 با امضای debug؛ ساخت و بررسی هر دو در GitHub Actions موفق. |
-| مرجع تصویری | فایل اصلی `icon.png` و ده تصویر مرجع رابط در محیط کاری موجود نبودند؛ تطبیق پیکسلی تأیید نشده است. |
+| `V2rayNG/app/src/main/res/layout/activity_main.xml` | Home، Configs، Settings و داک پایین |
+| `V2rayNG/app/src/main/res/layout/item_recycler_main.xml` | ظاهر ردیف سرور |
+| `V2rayNG/app/src/main/res/layout/layout_v2box_group_card.xml` | کارت Local و Subscription |
+| `V2rayNG/app/src/main/res/drawable-nodpi/v2box_source_icon.png` | آیکون اصلی ارسالی |
+| `V2rayNG/app/src/main/java/com/v2box/mobiletina/ui/MainActivity.kt` | ناوبری، اتصال، گروه‌ها و آمار |
+| `V2rayNG/app/src/main/java/com/v2box/mobiletina/handler/V2BoxSubscriptionInfo.kt` | حجم و انقضای اشتراک |
+| `V2rayNG/app/src/main/res/xml/pref_settings.xml` | تنظیمات پیشرفته |
+| `.github/workflows/android-build.yml` | ساخت و انتشار APK |
 
-## همهٔ اقدامات انجام‌شده
+## دریافت APK و همین گزارش
 
-1. **آماده‌سازی سورس:** نسخهٔ `2.2.6` بالادستی با کامیت `15b4fff8e45da9bc0acaa5cc1d80a1d3531e8712` وارد مخزن شد. `mtpali/MobileTinaVPN` برای رفتار Smart Connect و اشتراک، و `mtpali/v2rayNG` به‌عنوان مرجع ساخت بررسی شدند؛ فایل اجرایی آن‌ها داخل برنامه قرار نگرفت. زیرماژول AndroidLibXrayLite روی کامیت `3b5a9c858c4dc98b7079cefb1380537b6b5c155c` (`v26.7.5`) ثابت شد.
-2. **هویت و منابع:** package، namespace و کلاس‌های مربوط به شناسهٔ برنامه به `com.v2box.mobiletina` منتقل شدند. برچسب `V2BOX` و نسخهٔ `1` ثبت شد. آثار تصویری بالادستی حذف شدند و تا رسیدن آیکون اصلی، نشان برداری موقت V2BOX قرار گرفت.
-3. **زبان و چیدمان:** منابع زبان‌های دیگر حذف شدند؛ انگلیسی و فارسی باقی ماندند. جهت کلی پنجره LTR شد و پوسته‌های روشن و تاریک موجود حفظ شدند.
-4. **صفحهٔ اصلی:** ناوبری پایین Home، Configs و Settings ساخته شد. Home وضعیت و مدت اتصال، شمارندهٔ ارسال و دریافت، کلید Smart Connect، مسیر Routing و پیوند اینستاگرام `mobile.tina2` را نشان می‌دهد. Configs قابلیت‌های واردکردن، فهرست، پینگ و اشتراک را نگه می‌دارد و کانفیگ‌های Local و اشتراکی را جدا نشان می‌دهد.
-5. **Smart Connect:** سرویس واقعی سنجش پینگ در حالت فعال اجرا می‌شود و کانفیگ با کمترین پینگ مثبت انتخاب می‌شود. سقف زمان سنجش ۲۵ ثانیه است و عملیات قابل لغو است. با خاموش بودن کلید، کانفیگ انتخاب‌شدهٔ کاربر به‌طور معمول وصل می‌شود.
-6. **مرتب‌سازی و تازه‌سازی اشتراک:** مرتب‌سازی پس از پینگ به‌صورت پیش‌فرض فعال شد؛ کلید آن در Configs و منطق خواندن MMKV هماهنگ‌اند. هنگام ورود به برنامه، اشتراک‌های فعال دارای URL در پس‌زمینه به‌روز می‌شوند. زمان‌بندی دوره‌ای موجود حفظ شده است.
-7. **حجم و تاریخ اشتراک:** هدر استاندارد `subscription-userinfo` از پاسخ موفق اشتراک خوانده و مقادیر upload، download، total و expiry ذخیره می‌شوند. در صورت وجود این داده‌ها، ترافیک باقی‌مانده، تاریخ انقضا و روزهای باقی‌مانده در Home و Settings نمایش داده می‌شوند.
-8. **اینستاگرام:** پیوند `mobile.tina2` ابتدا در برنامهٔ اینستاگرام و در صورت نیاز در وب باز می‌شود. About و منوی کناری نیز به همان حساب اشاره می‌کنند.
-9. **ساخت خودکار:** فایل `.github/workflows/android-build.yml` برای Java 21، Android SDK/NDK، ساخت hev tunnel، کتابخانهٔ Xray ثابت‌شده و ساخت دو ABI تکمیل شد. گردش‌کار قبلی که می‌توانست خطای ساخت را نادیده بگیرد اصلاح شد. مرحلهٔ `aapt` بسته، نسخه و کتابخانهٔ بومی متناسب با هر ABI را بررسی می‌کند.
-10. **ادغام و رفع مشکل دانلود:** کد توسعه از طریق [PR شمارهٔ ۱](https://github.com/mtpali/v2box/pull/1) در `main` ادغام شد؛ کامیت ادغام `b22a0220ac9cc4360ab46c28432daf0707d0139e` است. پس از گزارش خرابی لینک‌های موقت، مرحلهٔ انتشار افزوده شد و دو APK در [نسخهٔ آزمایشی عمومی](https://github.com/mtpali/v2box/releases/tag/v1-preview) قرار گرفتند. راهنمای دانلود GitHub نیز نوشته شد.
-
-## ساخت، آزمون و شواهد
-
-- XML منابع و `git diff --check` محلی بررسی شدند. چون محیط محلی به توزیع Gradle دسترسی نداشت، کامپایل و تولید APK در GitHub Actions تأیید شد.
-- [اجرای موفق اولیهٔ توسعه](https://github.com/mtpali/v2box/actions/runs/36220594488) و [اجرای نهایی توسعه](https://github.com/mtpali/v2box/actions/runs/36220945310) ثبت شدند. در اجرای نهایی، `aapt dump badging` بستهٔ `com.v2box.mobiletina`، `versionCode=1`، `versionName=1` و کتابخانهٔ مناسب هر ABI را تأیید کرد.
-- همان درخت کد روی شاخهٔ اصلی در [اجرای 36221357502](https://github.com/mtpali/v2box/actions/runs/36221357502) نیز ساخته و بررسی شد.
-- [اجرای انتشار 36222227077](https://github.com/mtpali/v2box/actions/runs/36222227077) با وضعیت `success` پایان یافت و دو APK و `SHA256SUMS` در Release عمومی `v1-preview` بارگذاری شدند.
-- APKهای استخراج‌شدهٔ اجرای توسعه از نظر ABI، `libgojni.so`، `classes.dex` و بلوک امضای APK بررسی شدند. این فایل‌های توسعه مستقل از APKهای Release هستند و به دلیل امضای debug ممکن است هش یکسانی نداشته باشند.
-- نصب و اتصال عملی روی دستگاه یا شبیه‌ساز و تطبیق دیداری با اسکرین‌شات‌های مرجع در این محیط انجام نشده‌اند.
-
-## مسیرهای اصلی کد
-
-| فایل | نقش |
-| --- | --- |
-| `V2rayNG/app/src/main/java/com/v2box/mobiletina/ui/MainActivity.kt` | Home، ناوبری، اتصال، آمار و اطلاعات اشتراک |
-| `V2rayNG/app/src/main/java/com/v2box/mobiletina/handler/V2BoxSubscriptionInfo.kt` | مدل حجم و انقضای اشتراک |
-| `V2rayNG/app/src/main/java/com/v2box/mobiletina/handler/AngConfigManager.kt` و `util/HttpUtil.kt` | دریافت اشتراک و هدرهای آن |
-| `V2rayNG/app/src/main/res/layout/activity_main.xml` و `res/menu/menu_v2box_bottom.xml` | چیدمان و ناوبری پایین |
-| `V2rayNG/app/src/main/res/xml/pref_settings.xml` | تنظیمات و مرتب‌سازی |
-| `V2rayNG/app/build.gradle.kts` و `V2rayNG/app/src/main/AndroidManifest.xml` | شناسه، نسخه و تنظیمات اندروید |
-| `.github/workflows/android-build.yml` | ساخت، بررسی و انتشار APK |
-
-## فایل‌های قابل دانلود در GitHub
-
-| فایل | پردازنده / کاربرد | اندازه | دریافت |
+| فایل | دستگاه | اندازه | صفحهٔ فایل در GitHub |
 | --- | --- | ---: | --- |
-| `V2BOX-1-arm64-v8a.apk` | بیشتر گوشی‌های جدید، ARMv8 | ۳۳٬۸۷۰٬۸۲۳ بایت | [دانلود APK](https://github.com/mtpali/v2box/releases/download/v1-preview/V2BOX-1-arm64-v8a.apk) |
-| `V2BOX-1-armeabi-v7a.apk` | دستگاه‌های ARMv7 | ۳۴٬۳۴۴٬۷۲۷ بایت | [دانلود APK](https://github.com/mtpali/v2box/releases/download/v1-preview/V2BOX-1-armeabi-v7a.apk) |
-| `SHA256SUMS` | بررسی هش همین دو فایل Release | ۱۷۸ بایت | [دانلود هش‌ها](https://github.com/mtpali/v2box/releases/download/v1-preview/SHA256SUMS) |
+| `V2BOX-1-arm64-v8a.apk` | بیشتر گوشی‌های جدید، ARMv8 | ۳۳٬۹۰۷٬۳۷۹ بایت | [دریافت از Release](https://github.com/mtpali/v2box/releases/download/v1-preview-ui/V2BOX-1-arm64-v8a.apk) |
+| `V2BOX-1-armeabi-v7a.apk` | دستگاه‌های ARMv7 | ۳۴٬۳۸۱٬۲۸۷ بایت | [دریافت از Release](https://github.com/mtpali/v2box/releases/download/v1-preview-ui/V2BOX-1-armeabi-v7a.apk) |
+| `SHA256SUMS` | هش هر دو APK همین Release | ۱۷۸ بایت | [دریافت از Release](https://github.com/mtpali/v2box/releases/download/v1-preview-ui/SHA256SUMS) |
 
-اگر دانلود مستقیم روی دستگاه باز نشد، وارد [صفحهٔ Release](https://github.com/mtpali/v2box/releases/tag/v1-preview) شوید، بخش **Assets** را باز کنید و روی APK مناسب بزنید. این فایل‌ها خود APK هستند و نیاز به استخراج ZIP ندارند. برای دانلود **همین گزارش Markdown** از [صفحهٔ آن در مخزن](https://github.com/mtpali/v2box/blob/main/V2BOX_FULL_REPORT_FA.md)، دکمهٔ **Download raw file** در کنار **Raw** را انتخاب کنید.
+برای دانلود از داخل GitHub، وارد [صفحهٔ Release جدید](https://github.com/mtpali/v2box/releases/tag/v1-preview-ui) شوید، **Assets** را باز کنید و APK مناسب را بزنید. [Release قبلی `v1-preview`](https://github.com/mtpali/v2box/releases/tag/v1-preview) رابط جدید و آیکون ارسالی را ندارد.
 
-روش جایگزین APK: در انتهای [اجرای موفق GitHub Actions](https://github.com/mtpali/v2box/actions/runs/36222227077) زیر **Artifacts** فایل مناسب را بگیرید. دریافت Artifacts ممکن است نیازمند ورود به حساب GitHub باشد و ZIP می‌دهد؛ APK درون آن است. فایل‌های Release از انقضای Artifacts مستقل‌اند.
+برای دانلود این گزارش از خود GitHub، [صفحهٔ `V2BOX_FULL_REPORT_FA.md`](https://github.com/mtpali/v2box/blob/main/V2BOX_FULL_REPORT_FA.md) را باز کنید و دکمهٔ **Download raw file** کنار **Raw** را بزنید. APK در Release مستقیماً دانلود می‌شود و نیازی به استخراج ZIP ندارد. اگر به‌جای Release از [اجرای GitHub Actions](https://github.com/mtpali/v2box/actions/runs/36236411082) زیر **Artifacts** دانلود کنید، فایل ZIP دریافت می‌کنید که APK درون آن است.
 
-## محدودیت‌ها و ادامهٔ کار
+## محدودیت‌ها
 
-- `icon.png` اصلی و ده تصویر مرجع ذکرشده در گفتگو به‌صورت فایل در این محیط موجود نبودند. آیکون فعلی موقت است و همسانی دقیق رابط با تصاویر هنوز بررسی نشده است.
-- شمارندهٔ Home بر اساس آمار UID برنامه در نشست اتصال است و ممکن است شامل ترافیک خود برنامه هم بشود؛ مقدار سهمیهٔ سرویس‌دهنده جداگانه از هدر اشتراک به دست می‌آید.
-- APKهای کنونی **debug signed** هستند و کلید انتشار ثابت ندارند. ارتقا بین ساخت‌هایی با امضای متفاوت ممکن است مستلزم حذف نسخهٔ قبلی باشد.
-- برای تأیید نهایی، آزمون روی دستگاه واقعی، بررسی اتصال و اشتراک‌ها، جایگزینی آیکون اصلی و مقایسهٔ رابط با تصاویر مرجع لازم است.
+- آمار Upload/Download صفحهٔ Home از شمارندهٔ UID برنامه در نشست فعلی می‌آید و تخمینی از ترافیک تونل است؛ سهمیهٔ سرویس‌دهنده مستقلاً از هدر اشتراک خوانده می‌شود.
+- فایل‌های APK امضای debug دارند. برای ارتقای مطمئن بین ساخت‌های مختلف باید کلید انتشار ثابت تنظیم شود؛ نصب روی نسخه‌ای با امضای متفاوت ممکن است به حذف نسخهٔ پیشین نیاز داشته باشد.
+- پیش از ادعای تطبیق «دقیق»، لازم است ظاهر نهایی با اسکرین‌شات‌های کاربر روی دستگاه واقعی مقایسه شود.
