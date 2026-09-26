@@ -2,7 +2,7 @@
 
 ## Source and repository
 
-- Target: `mtpali/v2box`, working branch `v2box-development`.
+- Target: `mtpali/v2box`, implementation branch `v2box-development`, review PR [#1](https://github.com/mtpali/v2box/pull/1).
 - Base: `2dust/v2rayNG` tag `2.2.6`, commit `15b4fff8e45da9bc0acaa5cc1d80a1d3531e8712`; its source and GPL license were imported.
 - Reference consulted: `mtpali/MobileTinaVPN` (Smart Connect and subscription metadata behavior). The user also provided `mtpali/v2rayNG` as a previous build reference. V2BOX is implemented on the upstream 2.2.6 base; no binary from the personal references is bundled.
 - Pinned AndroidLibXrayLite submodule: `3b5a9c858c4dc98b7079cefb1380537b6b5c155c` (`v26.7.5`); hev tunnel is built from the pinned submodule.
@@ -28,7 +28,11 @@
 
 ## Verification and limitations
 
-- Resource XML parsed successfully and `git diff --check` passed locally. The local environment cannot reach the Gradle distribution, so compilation was checked in GitHub Actions. The first development run succeeded on 2026-09-26: [run 36220594488](https://github.com/mtpali/v2box/actions/runs/36220594488), creating both architecture artifacts. The arm64 APK was inspected and contained only `arm64-v8a` native libraries and an APK signing block. A subsequent run will verify the final polish commit.
+- Resource XML parsed successfully and `git diff --check` passed locally. The local environment cannot reach the Gradle distribution, so compilation was checked in GitHub Actions.
+- The first development run succeeded: [run 36220594488](https://github.com/mtpali/v2box/actions/runs/36220594488). The final source run also succeeded: [run 36220945310](https://github.com/mtpali/v2box/actions/runs/36220945310), commit `ac335f09dac5498d7b9ec71ddaf934d4bb8b567e`. Its `aapt dump badging` checks confirmed package `com.v2box.mobiletina`, version code `1`, version name `1` in both APKs, and the matching native Xray library for each ABI.
+- Final ARMv7 artifact: [V2BOX-1-armeabi-v7a](https://github.com/mtpali/v2box/actions/runs/36220945310/artifacts/10898547923). Extracted APK SHA-256: `ffbd43410b1083cb66ee9d6893b4a75bfe367e7d8fd16cb6e296099d32090f68` (34,344,727 bytes).
+- Final ARMv8 artifact: [V2BOX-1-arm64-v8a](https://github.com/mtpali/v2box/actions/runs/36220945310/artifacts/10898458060). Extracted APK SHA-256: `c1e1b316d71a7067915f0ea9316d6cc76988eac035fbcaaf9511698f03dccb36` (33,870,823 bytes).
+- Both extracted APKs were inspected for the expected sole native ABI, `libgojni.so`, `classes.dex`, and an APK signing block. No device/emulator interaction or screenshot comparison was available.
 - The previously uploaded `icon.png` and ten UI screenshots are not available as files in this Codex workspace. A centered V2BOX vector placeholder avoids showing the upstream icon; replace it with the exact supplied image once it is attached here. Pixel alignment with the screenshot references is therefore not verified.
 - Home upload/download numbers use Android app UID counters from the current connection session. These include app network traffic and are an approximation of tunnel usage; provider traffic quota uses subscription headers.
-- Actions artifacts are debug signed. A persistent release keystore is needed for APKs that can upgrade across runs without reinstalling.
+- Actions artifacts are debug signed and currently expire on 2026-12-25; rerun the workflow to regenerate them. A persistent release keystore is needed for APKs that can upgrade across runs without reinstalling.
