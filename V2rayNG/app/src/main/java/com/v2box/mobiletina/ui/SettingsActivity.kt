@@ -11,6 +11,7 @@ import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.AppConfig.VPN
 import com.v2box.mobiletina.R
 import com.v2box.mobiletina.extension.toastError
+import com.v2box.mobiletina.handler.MmkvManager
 import com.v2box.mobiletina.helper.MmkvPreferenceDataStore
 import com.v2box.mobiletina.root.RootManager
 import com.v2box.mobiletina.util.Utils
