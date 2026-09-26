@@ -18,7 +18,7 @@
         <item android:id="@+id/settings" android:icon="@drawable/ic_settings_24dp" android:title="@string/title_settings" />
     </group>
     <group android:id="@+id/drawer_group_instagram">
-        <item android:id="@+id/promotion" android:icon="@drawable/ic_promotion_24dp" android:title="@string/v2box_instagram" />
+        <item android:id="@+id/promotion" android:icon="@drawable/ic_promotion_24dp" android:title="@string/v2box_drawer_instagram" />
     </group>
     <group android:id="@+id/drawer_group_backup">
         <item android:id="@+id/backup_restore" android:icon="@drawable/ic_restore_24dp" android:title="@string/title_configuration_backup_restore" />

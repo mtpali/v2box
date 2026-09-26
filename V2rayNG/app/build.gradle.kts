@@ -17,9 +17,15 @@ android {
         multiDexEnabled = true
 
         val abiFilterList = (properties["ABI_FILTERS"] as? String)?.split(';')
+        val combinedArmApk = (properties["COMBINED_ARM_APK"] as? String)?.toBoolean() == true
+        if (combinedArmApk) {
+            ndk {
+                abiFilters += setOf("armeabi-v7a", "arm64-v8a")
+            }
+        }
         splits {
             abi {
-                isEnable = true
+                isEnable = !combinedArmApk
                 reset()
                 if (!abiFilterList.isNullOrEmpty()) {
                     include(*abiFilterList.toTypedArray())
@@ -31,7 +37,7 @@ android {
                         "x86"
                     )
                 }
-                isUniversalApk = abiFilterList.isNullOrEmpty()
+                isUniversalApk = !combinedArmApk && abiFilterList.isNullOrEmpty()
             }
         }
 

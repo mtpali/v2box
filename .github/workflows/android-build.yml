@@ -1,4 +1,4 @@
-name: Build V2BOX Android APKs
+name: Build V2BOX Android APK
 
 on:
   push:
@@ -36,29 +36,27 @@ jobs:
           mkdir -p V2rayNG/app/libs
           curl --fail --location --retry 3 --output V2rayNG/app/libs/libv2ray.aar \
             https://github.com/2dust/AndroidLibXrayLite/releases/download/v26.7.5/libv2ray.aar
-      - name: Build signed debug APKs for ARMv7 and ARMv8
+      - name: Build one signed debug APK for ARMv7 and ARMv8
         working-directory: V2rayNG
         run: |
           chmod +x gradlew
-          ./gradlew :app:assemblePlaystoreDebug '-PABI_FILTERS=armeabi-v7a;arm64-v8a' --stacktrace
-      - name: Verify package, version and native ABI
+          ./gradlew :app:assemblePlaystoreDebug -PCOMBINED_ARM_APK=true --stacktrace
+      - name: Verify one package with both native ABIs
         run: |
+          apk=V2rayNG/app/build/outputs/apk/playstore/debug/app-playstore-debug.apk
+          test -f "$apk"
+          test "$(find V2rayNG/app/build/outputs/apk/playstore/debug -name '*.apk' | wc -l)" -eq 1
+          "$ANDROID_HOME/build-tools/37.0.0/aapt" dump badging "$apk" | \
+            grep -F "package: name='com.v2box.mobiletina' versionCode='1' versionName='1'"
           for abi in armeabi-v7a arm64-v8a; do
-            apk=$(find V2rayNG/app/build/outputs/apk/playstore/debug -name "*${abi}*.apk" -print -quit)
-            test -n "$apk"
-            "$ANDROID_HOME/build-tools/37.0.0/aapt" dump badging "$apk" | \
-              grep -F "package: name='com.v2box.mobiletina' versionCode='1' versionName='1'"
-            unzip -Z1 "$apk" | grep -F "lib/${abi}/libgojni.so"
+            unzip -Z1 "$apk" | grep -Fx "lib/${abi}/libgojni.so"
+            unzip -Z1 "$apk" | grep -Fx "lib/${abi}/libhev-socks5-tunnel.so"
           done
+          if unzip -Z1 "$apk" | grep -Eq '^lib/(x86|x86_64)/'; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
-          name: V2BOX-1-armeabi-v7a
-          path: V2rayNG/app/build/outputs/apk/playstore/debug/*armeabi-v7a*.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        with:
-          name: V2BOX-1-arm64-v8a
-          path: V2rayNG/app/build/outputs/apk/playstore/debug/*arm64-v8a*.apk
+          name: V2BOX-1-universal-arm
+          path: V2rayNG/app/build/outputs/apk/playstore/debug/app-playstore-debug.apk
           if-no-files-found: error
 
   publish-preview:
@@ -71,25 +69,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: V2BOX-1-armeabi-v7a
-          path: dist/armeabi-v7a
-      - uses: actions/download-artifact@v4
-        with:
-          name: V2BOX-1-arm64-v8a
-          path: dist/arm64-v8a
-      - name: Publish directly downloadable preview APKs
+          name: V2BOX-1-universal-arm
+          path: dist/
+      - name: Publish directly downloadable preview APK
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp dist/armeabi-v7a/*.apk dist/V2BOX-1-armeabi-v7a.apk
-          cp dist/arm64-v8a/*.apk dist/V2BOX-1-arm64-v8a.apk
+          mv dist/app-playstore-debug.apk dist/V2BOX-1-universal-arm.apk
           (cd dist && sha256sum V2BOX-1-*.apk > SHA256SUMS)
           gh release create v1-preview-ui \
-            dist/V2BOX-1-armeabi-v7a.apk \
-            dist/V2BOX-1-arm64-v8a.apk \
+            dist/V2BOX-1-universal-arm.apk \
             dist/SHA256SUMS \
             --title 'V2BOX 1 UI preview' \
-            --notes 'ARMv7 and ARMv8 debug-signed preview APKs with the supplied icon and screenshot-based interface. An existing installation signed with another key may need to be uninstalled first.' \
+            --notes 'One ARMv7 and ARMv8 debug-signed preview APK. An existing installation signed with another key may need to be uninstalled first.' \
             --prerelease \
             --latest=false \
             --target "$GITHUB_SHA"

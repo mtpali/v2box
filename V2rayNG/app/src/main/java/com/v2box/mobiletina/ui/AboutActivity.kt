@@ -26,11 +26,5 @@ class AboutActivity : AppCompatActivity() {
             val id = intArrayOf(R.id.a1, R.id.a2, R.id.a3, R.id.a4)[index]
             findViewById<View>(id).setOnClickListener { Utils.openUri(this, SocialVault.a(index)) }
         }
-        findViewById<View>(R.id.about_licenses).setOnClickListener {
-            val webView = android.webkit.WebView(this)
-            webView.loadUrl("file:///android_asset/open_source_licenses.html")
-            android.app.AlertDialog.Builder(this).setTitle(R.string.title_oss_license)
-                .setView(webView).setPositiveButton(android.R.string.ok, null).show()
-        }
     }
 }

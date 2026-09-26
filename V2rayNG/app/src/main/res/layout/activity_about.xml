@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#111315"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:textDirection="rtl"
     android:orientation="vertical">
 
@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#111315"
-        android:layoutDirection="ltr"
+        android:layoutDirection="locale"
         app:navigationIcon="@drawable/ic_mobiletina_back_24dp"
         app:navigationIconTint="#FFFFFF"
-        app:title="@string/mobiletina_store_about_title"
+        app:title="@string/title_about"
         app:titleTextColor="#FFFFFF" />
 
     <ScrollView
@@ -250,16 +250,6 @@
                     android:textColor="#D9DDE2"
                     android:textSize="14sp" />
             </com.google.android.material.card.MaterialCardView>
-            <TextView
-                android:id="@+id/about_licenses"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:padding="12dp"
-                android:text="@string/title_oss_license"
-                android:textColor="#B8BCC2"
-                android:textSize="12sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

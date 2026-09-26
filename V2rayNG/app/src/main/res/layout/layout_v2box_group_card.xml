@@ -11,9 +11,11 @@
     app:cardElevation="0dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="wrap_content"
+        android:minHeight="76dp"
         android:gravity="center_vertical"
         android:paddingStart="12dp"
+        android:paddingTop="7dp"
         android:paddingEnd="8dp">
         <TextView
             android:id="@+id/group_icon"
@@ -30,6 +32,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:gravity="start"
+                android:textDirection="firstStrong"
                 android:textColor="@color/v2box_text"
                 android:textSize="15sp" />
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -46,13 +50,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:textColor="@color/v2box_muted"
                 android:textSize="11sp" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/group_ping"
-            android:layout_width="58dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:gravity="center"
             android:orientation="vertical"
@@ -68,7 +74,7 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/group_more"
-            android:layout_width="58dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:gravity="center"
             android:orientation="vertical"

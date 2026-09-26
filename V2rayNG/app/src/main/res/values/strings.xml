@@ -33,7 +33,11 @@
     <string name="v2box_group_actions">Actions</string>
     <string name="v2box_remaining">Remaining: %1$s</string>
     <string name="v2box_expiration">Expires: %1$s</string>
-    <string name="v2box_days_remaining">Days remaining: %1$d</string>
+    <string name="v2box_days_remaining">Days : %1$d</string>
+    <string name="v2box_link_copied">Subscription link copied</string>
+    <string name="v2box_copy_subscription_link">Copy subscription link</string>
+    <string name="v2box_subscription_link">Subscription link</string>
+    <string name="v2box_drawer_instagram">Instagram Mobile Tina</string>
     <string name="v2box_subscription_info">%1$s · %2$s</string>
     <string name="app_widget_name">V2BOX</string>
     <string name="app_tile_name">V2BOX</string>
@@ -302,7 +306,7 @@
     <string name="toast_tg_app_not_found">Telegram app not found</string>
     <string name="title_privacy_policy">Privacy policy</string>
     <string name="title_qr_code">QR code</string>
-    <string name="title_about">About</string>
+    <string name="title_about">Mobile Tina</string>
     <string name="title_source_code">Source code</string>
     <string name="title_oss_license">Open Source licenses</string>
 
@@ -511,7 +515,7 @@
     <string name="v2box_delete_subscription_confirm">Delete this subscription and its servers?</string>
     <string name="v2box_clear_app">Clear App</string>
     <string name="v2box_clear_app_confirm">Remove all configs, subscriptions and app settings? This cannot be undone.</string>
-    <string name="v2box_advanced_settings">Advanced settings</string>
+    <string name="v2box_advanced_settings">Settings</string>
     <string name="v2box_instagram_prefix">instagram :</string>
     <string name="v2box_drawer_title">Instagram</string>
     <string name="mobiletina_store_about_title" translatable="false">درباره موبایل تینا</string>

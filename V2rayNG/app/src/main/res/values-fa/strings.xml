@@ -33,6 +33,10 @@
     <string name="v2box_remaining">حجم باقی‌مانده: %1$s</string>
     <string name="v2box_expiration">انقضا: %1$s</string>
     <string name="v2box_days_remaining">روز باقی‌مانده: %1$d</string>
+    <string name="v2box_link_copied">لینک اشتراک کپی شد</string>
+    <string name="v2box_copy_subscription_link">کپی لینک اشتراک</string>
+    <string name="v2box_subscription_link">لینک اشتراک</string>
+    <string name="v2box_drawer_instagram">اینستاگرام موبایل تینا</string>
     <string name="v2box_subscription_info">%1$s · %2$s</string>
     <string name="app_widget_name">V2BOX</string>
     <string name="app_tile_name">V2BOX</string>
@@ -293,7 +297,7 @@
 
     <string name="title_privacy_policy">حریم خصوصی</string>
     <string name="title_qr_code">QR code</string>
-    <string name="title_about">درباره</string>
+    <string name="title_about">موبایل تینا</string>
     <string name="title_source_code">کد منبع</string>
     <string name="title_oss_license">مجوز های منبع باز</string>
 
@@ -332,7 +336,7 @@
     <string name="sub_setting_pre_profile_tip">لطفاً مطمئن شوید که نام مستعار وجود دارد و منحصر به فرد است</string>
     <string name="toast_invalid_update_interval">بازه بروزرسانی نامعتبر است. حداقل مقدار 15 دقیقه است.</string>
     <string name="title_sub_update">به‌روزرسانی گروه فعلی اشتراک</string>
-    <string name="title_real_ping_all_server">تاخیر واقعی کانفیگ های گروه فعلی</string>
+    <string name="title_real_ping_all_server">تست سرعت</string>
     <string name="title_user_asset_setting">فایل های منبع جغرافیایی</string>
     <string name="title_sort_by_test_results">مرتب‌ سازی بر اساس نتایج آزمایش</string>
     <string name="title_filter_config">فیلتر کردن کانفیگ‌ها</string>
@@ -488,7 +492,7 @@
     <string name="v2box_delete_subscription_confirm">این اشتراک و سرورهای آن حذف شوند؟</string>
     <string name="v2box_clear_app">پاکسازی برنامه</string>
     <string name="v2box_clear_app_confirm">همهٔ کانفیگ‌ها، اشتراک‌ها و تنظیمات برنامه پاک شوند؟ این کار قابل بازگشت نیست.</string>
-    <string name="v2box_advanced_settings">تنظیمات پیشرفته</string>
+    <string name="v2box_advanced_settings">تنظیمات</string>
     <string name="v2box_instagram_prefix">instagram :</string>
     <string name="v2box_drawer_title">Instagram</string>
     <string name="v2box_action_edit">ویرایش</string>

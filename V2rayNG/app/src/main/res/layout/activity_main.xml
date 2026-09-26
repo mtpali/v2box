@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="ltr">
+    android:layoutDirection="locale">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,18 +24,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 app:titleTextColor="@color/v2box_text">
-                <TextView
+                <ImageView
                     android:id="@+id/btn_scan_qr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="12dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="@string/v2box_scan_qr"
-                    android:textColor="@color/v2box_accent"
-                    android:textSize="13sp" />
+                    android:contentDescription="@string/v2box_scan_qr"
+                    app:srcCompat="@drawable/ic_v2box_scan_qr"
+                    app:tint="@color/v2box_accent" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -100,6 +99,8 @@
                                 android:paddingStart="38dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="7dp"
+                                android:gravity="start"
+                                android:textDirection="locale"
                                 android:textColor="@color/v2box_muted"
                                 android:textSize="14sp"
                                 android:visibility="gone" />

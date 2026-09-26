@@ -33,6 +33,7 @@ import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.R
 import com.v2box.mobiletina.core.CoreServiceManager
 import com.v2box.mobiletina.databinding.ActivityMainBinding
+import com.v2box.mobiletina.databinding.DialogShareSubscriptionBinding
 import com.v2box.mobiletina.databinding.LayoutV2boxGroupCardBinding
 import com.v2box.mobiletina.dto.GroupMapItem
 import com.v2box.mobiletina.dto.TestServiceMessage
@@ -50,6 +51,7 @@ import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.InstagramLink
 import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.MessageUtil
+import com.v2box.mobiletina.util.QRCodeDecoder
 import com.v2box.mobiletina.util.Utils
 import com.v2box.mobiletina.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -60,8 +62,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
-import java.text.DateFormat
-import java.util.Date
 
 class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val binding by lazy {
@@ -77,6 +77,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     private var uploadedAt = 0L
     private var downloadedAt = 0L
     private var waitingForStatusPing = false
+    private var subscriptionRefreshing = false
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -153,7 +154,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvInstagram.text = socialLabel
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
-        binding.navView.menu.findItem(R.id.promotion)?.title = socialLabel
+        binding.navView.menu.findItem(R.id.promotion)?.title = getString(R.string.v2box_drawer_instagram)
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -204,12 +205,17 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SUB_UPDATE_ON_START, true) &&
             MmkvManager.decodeSubscriptions().any { it.subscription.enabled && it.subscription.url.isNotBlank() }
         ) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                AngConfigManager.updateConfigViaSubAll()
-                withContext(Dispatchers.Main) {
+            subscriptionRefreshing = true
+            lifecycleScope.launch {
+                try {
+                    withContext(Dispatchers.IO) { AngConfigManager.updateConfigViaSubAll() }
                     setupGroupTab()
                     mainViewModel.reloadServerList()
                     refreshSubscriptionInfo()
+                } catch (error: Exception) {
+                    LogUtil.e(AppConfig.TAG, "Subscription startup refresh failed", error)
+                } finally {
+                    subscriptionRefreshing = false
                 }
             }
         }
@@ -291,12 +297,14 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             sub?.let { item ->
                 val total = item.trafficTotalBytes ?: 0L
                 val remaining = V2BoxSubscriptionInfo.remainingBytes(item)
-                if (total > 0L && remaining != null) {
-                    val used = total - remaining
-                    card.groupProgress.isVisible = true
-                    card.groupProgress.progress = ((used.toDouble() / total) * 100).toInt().coerceIn(0, 100)
-                    details += getString(R.string.v2box_group_usage,
-                        Formatter.formatShortFileSize(this, used), Formatter.formatShortFileSize(this, total))
+                if (remaining != null) {
+                    if (total > 0L) {
+                        val used = total - remaining
+                        card.groupProgress.isVisible = true
+                        card.groupProgress.progress = ((used.toDouble() / total) * 100).toInt().coerceIn(0, 100)
+                    }
+                    details += getString(R.string.v2box_remaining,
+                        Formatter.formatShortFileSize(this, remaining))
                 }
                 item.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
                     val days = ((epoch - System.currentTimeMillis() / 1_000L)
@@ -338,14 +346,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             when (which) {
                 0 -> requestActivityLauncher.launch(Intent(this, SubEditActivity::class.java)
                     .putExtra("subId", group.id))
-                1 -> {
-                    if (sub.url.isBlank()) toastError(R.string.toast_invalid_url)
-                    else {
-                        val share = Intent(Intent.ACTION_SEND).setType("text/plain")
-                            .putExtra(Intent.EXTRA_TEXT, sub.url)
-                        startActivity(Intent.createChooser(share, getString(R.string.v2box_share_subscription)))
-                    }
-                }
+                1 -> showSubscriptionShare(group.remarks, sub.url)
                 2 -> AlertDialog.Builder(this).setTitle(group.remarks)
                     .setMessage(R.string.v2box_delete_subscription_confirm)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -360,6 +361,26 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     }.setNegativeButton(android.R.string.cancel, null).show()
             }
         }.show()
+    }
+
+    private fun showSubscriptionShare(title: String, url: String) {
+        if (url.isBlank()) {
+            toastError(R.string.toast_invalid_url)
+            return
+        }
+        val qrCode = QRCodeDecoder.createQRCode(url, 512) ?: run {
+            toastError(R.string.toast_failure)
+            return
+        }
+        val share = DialogShareSubscriptionBinding.inflate(layoutInflater)
+        share.subscriptionQr.setImageBitmap(qrCode)
+        share.subscriptionUrl.text = url
+        share.copySubscriptionUrl.setOnClickListener {
+            Utils.setClipboard(this, url)
+            toast(R.string.v2box_link_copied)
+        }
+        AlertDialog.Builder(this).setTitle(title).setView(share.root)
+            .setPositiveButton(android.R.string.ok, null).show()
     }
 
     fun refreshGroupTabTitles(refreshAll: Boolean = false) {
@@ -600,9 +621,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     Formatter.formatShortFileSize(this, remaining))
             }
             item.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
-                val date = DateFormat.getDateInstance(DateFormat.MEDIUM, SettingsManager.getLocale())
-                    .format(Date(epoch.coerceAtMost(Long.MAX_VALUE / 1_000) * 1_000))
-                parts += getString(R.string.v2box_expiration, date)
                 val days = ((epoch - System.currentTimeMillis() / 1_000)
                     .coerceAtLeast(0L) + 86_399L) / 86_400L
                 parts += getString(R.string.v2box_days_remaining, days)
@@ -869,13 +887,17 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     /**
      * import config from sub
      */
-    fun importConfigViaSub(): Boolean {
+    fun importConfigViaSub(onFinished: (() -> Unit)? = null): Boolean {
+        if (subscriptionRefreshing) {
+            onFinished?.invoke()
+            return false
+        }
+        subscriptionRefreshing = true
         showLoading()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = mainViewModel.updateConfigViaSubAll()
-            delay(500L)
-            launch(Dispatchers.Main) {
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) { mainViewModel.updateConfigViaSubAll() }
                 if (result.successCount + result.failureCount + result.skipCount == 0) {
                     toast(R.string.title_update_subscription_no_subscription)
                 } else if (result.successCount > 0 && result.failureCount + result.skipCount == 0) {
@@ -888,11 +910,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                         )
                     )
                 }
-                if (result.configCount > 0) {
+                if (result.successCount > 0) {
+                    setupGroupTab()
                     mainViewModel.reloadServerList()
-                    refreshGroupTabTitles()
+                } else {
+                    refreshGroupTabTitles(true)
                 }
+                refreshSubscriptionInfo()
+            } catch (error: Exception) {
+                LogUtil.e(AppConfig.TAG, "Subscription refresh failed", error)
+                toastError(R.string.toast_failure)
+            } finally {
+                subscriptionRefreshing = false
                 hideLoading()
+                onFinished?.invoke()
             }
         }
         return true
