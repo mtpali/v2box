@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.R
@@ -54,27 +54,28 @@ class MainRecyclerAdapter(
             val guid = data[position].guid
             val profile = data[position].profile
 
-            holder.itemView.setBackgroundColor(Color.TRANSPARENT)
-
             //Name address
             holder.itemMainBinding.tvName.text = profile.remarks
             holder.itemMainBinding.tvStatistics.text = getAddress(profile)
-            holder.itemMainBinding.tvType.text = getProtocolDescription(profile)
+            holder.itemMainBinding.tvType.text = profile.configType.name
 
             //TestResult
             val aff = MmkvManager.decodeServerAffiliationInfo(guid)
             holder.itemMainBinding.tvTestResult.text = aff?.getTestDelayString().orEmpty()
+            holder.itemMainBinding.tvTestResult.isVisible = !holder.itemMainBinding.tvTestResult.text.isNullOrBlank()
             if ((aff?.testDelayMillis ?: 0L) < 0L) {
-                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, R.color.colorPingRed))
+                holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge_error)
             } else {
-                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, R.color.colorPing))
+                holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge)
             }
 
             //layoutIndicator
             if (guid == MmkvManager.getSelectServer()) {
-                holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.color.colorIndicator)
+                holder.itemMainBinding.infoContainer.setBackgroundResource(R.drawable.v2box_node_selected)
+                holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.drawable.v2box_protocol_selected)
             } else {
-                holder.itemMainBinding.layoutIndicator.setBackgroundResource(0)
+                holder.itemMainBinding.infoContainer.setBackgroundResource(R.drawable.v2box_node_background)
+                holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.drawable.v2box_protocol_normal)
             }
 
             //subscription remarks

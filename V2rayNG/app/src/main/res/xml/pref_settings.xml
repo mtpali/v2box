@@ -2,6 +2,26 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory android:title="@string/v2box_quick_settings">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_smart_connect_enabled"
+            android:summary="@string/v2box_smart_summary"
+            android:title="@string/v2box_smart_connect" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_auto_sort_after_test"
+            android:summary="@string/summary_pref_auto_sort_after_test"
+            android:title="@string/title_pref_auto_sort_after_test" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_sub_update_on_start"
+            android:summary="@string/v2box_sub_update_summary"
+            android:title="@string/v2box_sub_update_on_start" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/title_ui_settings">
         <CheckBoxPreference
             android:key="pref_speed_enabled"
@@ -37,7 +57,7 @@
             android:title="@string/title_language" />
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="2"
             android:entries="@array/ui_mode_night"
             android:entryValues="@array/ui_mode_night_value"
             android:key="pref_ui_mode_night"
@@ -133,7 +153,7 @@
     <PreferenceCategory android:title="@string/title_core_settings">
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="pref_sniffing_enabled"
             android:summary="@string/summary_pref_sniffing_enabled"
             android:title="@string/title_pref_sniffing_enabled" />
@@ -281,18 +301,6 @@
 
     <PreferenceCategory android:title="@string/title_advanced">
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_smart_connect_enabled"
-            android:summary="@string/v2box_smart_summary"
-            android:title="@string/v2box_smart_connect" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_sub_update_on_start"
-            android:summary="@string/v2box_sub_update_summary"
-            android:title="@string/v2box_sub_update_on_start" />
-
         <Preference
             android:key="pref_subscription_info"
             android:selectable="false"
@@ -308,12 +316,6 @@
             android:defaultValue="false"
             android:summary="@string/summary_pref_auto_remove_invalid_after_test"
             android:title="@string/title_pref_auto_remove_invalid_after_test" />
-
-        <CheckBoxPreference
-            android:key="pref_auto_sort_after_test"
-            android:defaultValue="true"
-            android:summary="@string/summary_pref_auto_sort_after_test"
-            android:title="@string/title_pref_auto_sort_after_test" />
 
         <EditTextPreference
             android:key="pref_delay_test_url"
@@ -342,19 +344,6 @@
             android:key="pref_mode"
             android:summary="%s"
             android:title="@string/title_mode" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_root_mode_enabled"
-            android:summary="@string/summary_root_mode_enabled"
-            android:title="@string/title_root_mode_enabled" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_root_lan_sharing"
-            android:summary="@string/summary_root_lan_sharing"
-            android:title="@string/title_root_lan_sharing" />
-
 
     </PreferenceCategory>
 

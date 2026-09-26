@@ -19,6 +19,16 @@
     <string name="v2box_sub_update_summary">Update enabled subscriptions when V2BOX opens</string>
     <string name="v2box_subscription_details">Subscription balance</string>
     <string name="v2box_instagram">Instagram · mobile.tina2</string>
+    <string name="v2box_smart_button">Smart-Connect</string>
+    <string name="v2box_sort_ping">SORT BY:  Ping</string>
+    <string name="v2box_quick_settings">QUICK SETTINGS</string>
+    <string name="v2box_device">DEVICE</string>
+    <string name="v2box_device_id">Device ID</string>
+    <string name="v2box_tunnel_settings">Tunnel Settings</string>
+    <string name="v2box_dns_settings">DNS Settings</string>
+    <string name="v2box_speed_settings">Speed Test</string>
+    <string name="v2box_no_info">No Information</string>
+    <string name="v2box_group_usage">%1$s / %2$s</string>
     <string name="v2box_remaining">Remaining: %1$s</string>
     <string name="v2box_expiration">Expires: %1$s</string>
     <string name="v2box_days_remaining">Days remaining: %1$d</string>

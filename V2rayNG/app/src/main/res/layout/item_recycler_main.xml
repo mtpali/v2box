@@ -1,223 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_bg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginBottom="2dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/info_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?attr/selectableItemBackground"
+        android:layout_height="78dp"
+        android:background="@drawable/v2box_node_background"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center"
-        android:nextFocusRight="@+id/layout_share"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_spacing_dp4"
-        android:paddingTop="@dimen/padding_spacing_dp8"
-        android:paddingEnd="@dimen/padding_spacing_dp4"
-        android:paddingBottom="@dimen/padding_spacing_dp8">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/layout_indicator"
-            android:layout_width="@dimen/padding_spacing_dp4"
+            android:layout_width="42dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:orientation="vertical" />
+            android:background="@drawable/v2box_protocol_normal">
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_width="72dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:rotation="-90"
+                android:singleLine="true"
+                android:textColor="@color/v2box_text"
+                android:textSize="13sp" />
+        </FrameLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="7dp">
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="@color/v2box_text"
+                android:textSize="15sp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingStart="@dimen/padding_spacing_dp8">
-
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="2"
-                            android:minLines="1"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="@dimen/padding_spacing_dp8">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/layout_subscription"
-                                android:layout_width="@dimen/image_size_dp24"
-                                android:layout_height="@dimen/image_size_dp24"
-                                android:layout_gravity="bottom"
-                                android:layout_marginEnd="@dimen/padding_spacing_dp4"
-                                android:background="@drawable/ic_circle">
-
-                                <TextView
-                                    android:id="@+id/tv_subscription"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                                    android:textSize="11sp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
-
-                            <TextView
-                                android:id="@+id/tv_statistics"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:lines="1"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/layout_share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:contentDescription="@string/title_configuration_share"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:nextFocusLeft="@+id/info_container"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_spacing_dp8">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/image_size_dp24"
-                            app:srcCompat="@drawable/ic_share_24dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:contentDescription="@string/menu_item_edit_config"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_spacing_dp8">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_dp24"
-                            android:layout_height="@dimen/image_size_dp24"
-                            app:srcCompat="@drawable/ic_edit_24dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_remove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:contentDescription="@string/menu_item_del_config"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_spacing_dp8">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_dp24"
-                            android:layout_height="@dimen/image_size_dp24"
-                            app:srcCompat="@drawable/ic_delete_24dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:contentDescription="@string/notification_action_more"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_spacing_dp8">
-
-                        <ImageView
-                            android:layout_width="@dimen/image_size_dp24"
-                            android:layout_height="@dimen/image_size_dp24"
-                            app:srcCompat="@drawable/ic_more_vert_24dp" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="@dimen/padding_spacing_dp8"
-                android:paddingTop="@dimen/padding_spacing_dp8"
-                android:paddingEnd="@dimen/padding_spacing_dp8">
-
+                android:paddingBottom="8dp">
+                <FrameLayout
+                    android:id="@+id/layout_subscription"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/ic_circle"
+                    android:visibility="gone">
+                    <TextView android:id="@+id/tv_subscription" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:textSize="10sp" />
+                </FrameLayout>
                 <TextView
-                    android:id="@+id/tv_type"
+                    android:id="@+id/tv_statistics"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:lines="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/colorConfigType"
-                    android:textSize="11sp"
-                    tools:text="VLESS" />
-
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/v2box_muted"
+                    android:textSize="12sp" />
                 <TextView
                     android:id="@+id/tv_test_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/colorPing"
-                    android:textSize="11sp"
-                    tools:text="214ms" />
-
+                    android:background="@drawable/v2box_ping_badge"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="11sp" />
             </LinearLayout>
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/v2box_node_actions"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
+            <FrameLayout
+                android:id="@+id/layout_edit"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/menu_item_edit_config"
+                android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:layout_gravity="center" app:srcCompat="@drawable/ic_edit_24dp" app:tint="@color/v2box_text" android:contentDescription="@null" />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/layout_share"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/title_configuration_share"
+                android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:layout_gravity="center" app:srcCompat="@drawable/ic_share_24dp" app:tint="@color/v2box_text" android:contentDescription="@null" />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/layout_remove"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/menu_item_del_config"
+                android:focusable="true">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:layout_gravity="center" app:srcCompat="@drawable/ic_delete_24dp" app:tint="@color/v2box_text" android:contentDescription="@null" />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/layout_more"
+                android:layout_width="32dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/notification_action_more"
+                android:focusable="true"
+                android:visibility="gone">
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:layout_gravity="center" app:srcCompat="@drawable/ic_more_vert_24dp" app:tint="@color/v2box_text" android:contentDescription="@null" />
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

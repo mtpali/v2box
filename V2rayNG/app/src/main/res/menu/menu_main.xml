@@ -2,20 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/import_qrcode"
+        android:icon="@drawable/ic_scan_24dp"
+        android:title="@string/menu_item_import_config_qrcode"
+        app:iconTint="@color/v2box_accent"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/locate_selected_config"
+        android:icon="@drawable/ic_v2box_star"
+        android:title="@string/title_locate_selected_config"
+        app:iconTint="@color/v2box_accent"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/search_view"
         android:icon="@drawable/ic_outline_filter_alt_24"
         android:title="@string/menu_item_search"
+        app:iconTint="@color/v2box_accent"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:icon="@drawable/ic_add_24dp"
         android:title="@string/menu_item_add_config"
+        app:iconTint="@color/v2box_accent"
         app:showAsAction="ifRoom">
         <menu>
-            <item
-                android:id="@+id/import_qrcode"
-                android:title="@string/menu_item_import_config_qrcode"
-                app:showAsAction="never" />
             <item
                 android:id="@+id/import_clipboard"
                 android:title="@string/menu_item_import_config_clipboard"
@@ -97,10 +107,6 @@
     <item
         android:id="@+id/sort_by_test_results"
         android:title="@string/title_sort_by_test_results"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/locate_selected_config"
-        android:title="@string/title_locate_selected_config"
         app:showAsAction="never" />
     <item
         android:id="@+id/sub_update"

@@ -82,12 +82,12 @@ jobs:
           cp dist/armeabi-v7a/*.apk dist/V2BOX-1-armeabi-v7a.apk
           cp dist/arm64-v8a/*.apk dist/V2BOX-1-arm64-v8a.apk
           (cd dist && sha256sum V2BOX-1-*.apk > SHA256SUMS)
-          gh release create v1-preview \
+          gh release create v1-preview-ui \
             dist/V2BOX-1-armeabi-v7a.apk \
             dist/V2BOX-1-arm64-v8a.apk \
             dist/SHA256SUMS \
-            --title 'V2BOX 1 preview' \
-            --notes 'ARMv7 and ARMv8 debug-signed preview APKs. An existing installation signed with another key may need to be uninstalled first.' \
+            --title 'V2BOX 1 UI preview' \
+            --notes 'ARMv7 and ARMv8 debug-signed preview APKs with the supplied icon and screenshot-based interface. An existing installation signed with another key may need to be uninstalled first.' \
             --prerelease \
             --latest=false \
             --target "$GITHUB_SHA"

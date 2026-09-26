@@ -18,6 +18,16 @@
     <string name="v2box_sub_update_summary">اشتراک‌های فعال را هنگام باز شدن V2BOX به‌روز کن</string>
     <string name="v2box_subscription_details">مانده اشتراک</string>
     <string name="v2box_instagram">اینستاگرام · mobile.tina2</string>
+    <string name="v2box_smart_button">اتصال هوشمند</string>
+    <string name="v2box_sort_ping">مرتب‌سازی: پینگ</string>
+    <string name="v2box_quick_settings">تنظیمات سریع</string>
+    <string name="v2box_device">دستگاه</string>
+    <string name="v2box_device_id">شناسهٔ دستگاه</string>
+    <string name="v2box_tunnel_settings">تنظیمات تونل</string>
+    <string name="v2box_dns_settings">تنظیمات DNS</string>
+    <string name="v2box_speed_settings">آزمایش سرعت</string>
+    <string name="v2box_no_info">اطلاعاتی موجود نیست</string>
+    <string name="v2box_group_usage">%1$s / %2$s</string>
     <string name="v2box_remaining">حجم باقی‌مانده: %1$s</string>
     <string name="v2box_expiration">انقضا: %1$s</string>
     <string name="v2box_days_remaining">روز باقی‌مانده: %1$d</string>

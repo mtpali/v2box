@@ -14,6 +14,7 @@ import com.v2box.mobiletina.AppConfig.VPN
 import com.v2box.mobiletina.R
 import com.v2box.mobiletina.extension.toastError
 import com.v2box.mobiletina.handler.MmkvManager
+import com.v2box.mobiletina.handler.V2BoxSubscriptionInfo
 import com.v2box.mobiletina.helper.MmkvPreferenceDataStore
 import com.v2box.mobiletina.root.RootManager
 import com.v2box.mobiletina.util.Utils
@@ -162,15 +163,17 @@ class SettingsActivity : BaseActivity() {
         private fun refreshSubscriptionBalance() {
             val preference = findPreference<Preference>("pref_subscription_info") ?: return
             val subscriptions = MmkvManager.decodeSubscriptions()
-            val item = subscriptions.firstOrNull { it.subscription.enabled &&
-                (it.subscription.trafficTotalBytes != null || it.subscription.expireEpochSeconds != null)
-            }?.subscription
+            val selectedSubscriptionId = MmkvManager.getSelectServer()
+                ?.let { MmkvManager.decodeServerConfig(it)?.subscriptionId }
+            val activeTabId = MmkvManager.decodeSettingsString(AppConfig.CACHE_SUBSCRIPTION_ID)
+            val item = V2BoxSubscriptionInfo.selectForDisplay(
+                subscriptions, listOfNotNull(selectedSubscriptionId, activeTabId)
+            )
             val parts = mutableListOf<String>()
             item?.let { sub ->
-                sub.trafficTotalBytes?.takeIf { it > 0L }?.let { total ->
-                    val used = (sub.trafficUploadBytes ?: 0L) + (sub.trafficDownloadBytes ?: 0L)
+                V2BoxSubscriptionInfo.remainingBytes(sub)?.let { remaining ->
                     parts += getString(R.string.v2box_remaining,
-                        Formatter.formatShortFileSize(requireContext(), (total - used).coerceAtLeast(0L)))
+                        Formatter.formatShortFileSize(requireContext(), remaining))
                 }
                 sub.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
                     val date = DateFormat.getDateInstance(DateFormat.MEDIUM)

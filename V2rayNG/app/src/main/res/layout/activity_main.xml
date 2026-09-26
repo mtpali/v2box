@@ -9,16 +9,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/v2box_background"
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/top_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/v2box_background"
+            app:elevation="0dp">
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="56dp"
+                app:titleTextColor="@color/v2box_text" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
@@ -30,127 +35,100 @@
                 android:id="@+id/home_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:scrollbars="none">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="24dp">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:text="@string/v2box_home_title"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
-                    <TextView
-                        android:id="@+id/tv_home_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/connection_not_connected"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-                    <TextView
-                        android:id="@+id/tv_selected_server"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:text="@string/v2box_no_server"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
+                        android:textColor="@color/v2box_text"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        app:cardCornerRadius="22dp"
-                        app:cardElevation="2dp">
+                        android:layout_marginTop="22dp"
+                        app:cardBackgroundColor="@color/v2box_card"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="0dp">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="24dp">
+                            android:paddingStart="18dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="18dp"
+                            android:paddingBottom="10dp">
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_v2box_clock" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="@string/v2box_duration" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                                <TextView android:id="@+id/tv_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="-" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                            </LinearLayout>
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_v2box_upload" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <TextView android:id="@+id/tv_upload" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="@string/v2box_upload" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                            </LinearLayout>
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_v2box_download" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <TextView android:id="@+id/tv_download" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="@string/v2box_download" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                            </LinearLayout>
                             <TextView
+                                android:id="@+id/tv_subscription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/v2box_duration"
-                                android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
-                            <TextView
-                                android:id="@+id/tv_duration"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:gravity="center"
-                                android:text="00:00:00"
-                                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall" />
+                                android:paddingStart="38dp"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="7dp"
+                                android:textColor="@color/v2box_muted"
+                                android:textSize="14sp"
+                                android:visibility="gone" />
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_v2box_bolt" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <com.google.android.material.switchmaterial.SwitchMaterial
+                                    android:id="@+id/switch_smart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="14dp"
+                                    android:checked="true"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/v2box_smart_connect"
+                                    android:textColor="@color/v2box_text"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
                             <LinearLayout
+                                android:id="@+id/btn_routing"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="24dp"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:id="@+id/tv_upload"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="@string/v2box_upload"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-                                <TextView
-                                    android:id="@+id/tv_download"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="@string/v2box_download"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+                                android:layout_height="54dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_routing_24dp" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:text="@string/routing_settings_title" android:textColor="@color/v2box_accent" android:textSize="16sp" />
+                                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_v2box_chevron" app:tint="@color/v2box_muted" android:contentDescription="@null" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/btn_instagram"
+                                android:layout_width="match_parent"
+                                android:layout_height="54dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center_vertical">
+                                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_v2box_community" app:tint="@color/v2box_text" android:contentDescription="@null" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:text="@string/v2box_instagram" android:textColor="@color/v2box_accent" android:textSize="16sp" />
+                                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_v2box_chevron" app:tint="@color/v2box_muted" android:contentDescription="@null" />
                             </LinearLayout>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_connect"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:layout_marginTop="24dp"
-                        android:text="@string/v2box_connect"
-                        android:textSize="18sp"
-                        app:backgroundTint="@color/color_fab_active"
-                        app:cornerRadius="20dp" />
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switch_smart"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:checked="true"
-                        android:padding="12dp"
-                        android:text="@string/v2box_smart_connect" />
-                    <TextView
-                        android:id="@+id/tv_subscription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:padding="12dp"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:visibility="gone" />
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_routing"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/routing_settings_title" />
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_instagram"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/v2box_instagram" />
                 </LinearLayout>
             </ScrollView>
 
@@ -166,62 +144,130 @@
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progress_bar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="4dp"
                         android:indeterminate="true"
                         android:visibility="invisible" />
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switch_auto_sort"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:padding="16dp"
-                        android:text="@string/title_pref_auto_sort_after_test" />
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="20dp"
+                        android:text="@string/v2box_configs"
+                        android:textColor="@color/v2box_text"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="46dp" android:gravity="center_vertical" android:paddingStart="22dp" android:paddingEnd="20dp">
+                        <TextView android:id="@+id/btn_sort_ping" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center_vertical" android:text="@string/v2box_sort_ping" android:textColor="@color/v2box_muted" android:textSize="15sp" android:clickable="true" android:focusable="true" />
+                        <TextView android:id="@+id/btn_ping_all" android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:paddingStart="12dp" android:paddingEnd="12dp" android:text="@string/title_real_ping_all_server" android:textColor="@color/v2box_accent" android:textSize="15sp" android:clickable="true" android:focusable="true" />
+                    </LinearLayout>
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:tabIndicatorFullWidth="false"
+                        android:visibility="gone"
                         app:tabMode="scrollable" />
+                    <LinearLayout
+                        android:id="@+id/group_cards"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp" />
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/view_pager"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1" />
-                    <LinearLayout
-                        android:id="@+id/layout_test"
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_test_state"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:paddingStart="16dp"
-                            android:text="@string/connection_test_pending"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-                    </LinearLayout>
                 </LinearLayout>
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="24dp"
                     android:contentDescription="@string/v2box_connect"
                     android:src="@drawable/ic_play_24dp"
-                    app:tint="@color/colorWhite" />
+                    android:visibility="gone" />
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <ScrollView
+                android:id="@+id/settings_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="22dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/title_settings" android:textColor="@color/v2box_text" android:textSize="30sp" android:textStyle="bold" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:paddingStart="12dp" android:text="@string/v2box_quick_settings" android:textColor="@color/v2box_muted" android:textSize="13sp" />
+                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:cardBackgroundColor="@color/v2box_card" app:cardCornerRadius="18dp" app:cardElevation="0dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp">
+                            <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_smart_settings" android:layout_width="match_parent" android:layout_height="56dp" android:text="@string/v2box_smart_connect" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color_light" />
+                            <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_auto_sort" android:layout_width="match_parent" android:layout_height="56dp" android:text="@string/title_pref_auto_sort_after_test" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color_light" />
+                            <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switch_sub_update" android:layout_width="match_parent" android:layout_height="56dp" android:text="@string/v2box_sub_update_on_start" android:textColor="@color/v2box_text" android:textSize="16sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:paddingStart="12dp" android:text="@string/v2box_device" android:textColor="@color/v2box_muted" android:textSize="13sp" />
+                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:cardBackgroundColor="@color/v2box_card" app:cardCornerRadius="18dp" app:cardElevation="0dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp">
+                            <TextView android:id="@+id/row_language" android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical" android:text="@string/title_language" android:textColor="@color/v2box_text" android:textSize="16sp" android:clickable="true" android:focusable="true" />
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color_light" />
+                            <TextView android:id="@+id/tv_device_id" android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical" android:text="@string/v2box_device_id" android:textColor="@color/v2box_text" android:textSize="15sp" android:ellipsize="middle" android:maxLines="1" />
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider_color_light" />
+                            <TextView android:id="@+id/row_subscription_info" android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center_vertical" android:text="@string/v2box_subscription_details" android:textColor="@color/v2box_text" android:textSize="16sp" android:clickable="true" android:focusable="true" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:paddingStart="12dp" android:text="@string/title_settings" android:textColor="@color/v2box_muted" android:textSize="13sp" />
+                    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" app:cardBackgroundColor="@color/v2box_card" app:cardCornerRadius="18dp" app:cardElevation="0dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp">
+                            <TextView android:id="@+id/row_tunnel" style="@style/V2Box.SettingRow" android:text="@string/v2box_tunnel_settings" />
+                            <TextView android:id="@+id/row_dns" style="@style/V2Box.SettingRow" android:text="@string/v2box_dns_settings" />
+                            <TextView android:id="@+id/row_route" style="@style/V2Box.SettingRow" android:text="@string/routing_settings_title" />
+                            <TextView android:id="@+id/row_sub_settings" style="@style/V2Box.SettingRow" android:text="@string/title_sub_setting" />
+                            <TextView android:id="@+id/row_speed" style="@style/V2Box.SettingRow" android:text="@string/v2box_speed_settings" />
+                            <TextView android:id="@+id/row_about" style="@style/V2Box.SettingRow" android:text="@string/title_about" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </ScrollView>
         </FrameLayout>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/menu_v2box_bottom" />
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="@color/v2box_dock"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <LinearLayout android:id="@+id/layout_test" android:layout_width="match_parent" android:layout_height="68dp" android:gravity="center_vertical" android:paddingStart="20dp" android:paddingEnd="20dp" android:clickable="true" android:focusable="true">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:id="@+id/tv_home_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/connection_not_connected" android:textColor="@color/v2box_text" android:textSize="15sp" />
+                        <TextView android:id="@+id/tv_test_state" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/v2box_text" android:textSize="15sp" android:visibility="gone" />
+                        <TextView android:id="@+id/tv_selected_server" android:layout_width="match_parent" android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1" android:textColor="@color/v2box_muted" android:textSize="12sp" android:visibility="gone" />
+                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btn_connect" android:layout_width="132dp" android:layout_height="52dp" android:text="@string/v2box_connect" android:textColor="@color/v2box_text" android:textSize="16sp" app:backgroundTint="@color/v2box_control" app:cornerRadius="28dp" />
+                </LinearLayout>
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottom_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:background="@android:color/transparent"
+                    app:itemIconTint="@color/v2box_nav_tint"
+                    app:itemTextColor="@color/v2box_nav_tint"
+                    app:labelVisibilityMode="labeled"
+                    app:menu="@menu/menu_v2box_bottom" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
