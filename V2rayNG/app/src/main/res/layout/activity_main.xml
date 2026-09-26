@@ -51,6 +51,16 @@
                         android:gravity="center"
                         android:text="@string/connection_not_connected"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    <TextView
+                        android:id="@+id/tv_selected_server"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/v2box_no_server"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"

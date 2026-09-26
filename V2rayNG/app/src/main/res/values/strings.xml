@@ -5,6 +5,7 @@
     <string name="v2box_configs">Configs</string>
     <string name="v2box_local">Local</string>
     <string name="v2box_home_title">V2BOX</string>
+    <string name="v2box_no_server">No config selected</string>
     <string name="v2box_duration">Duration</string>
     <string name="v2box_upload">Upload</string>
     <string name="v2box_download">Download</string>
@@ -16,6 +17,7 @@
     <string name="v2box_smart_unavailable">No working server found. Test or add a config.</string>
     <string name="v2box_sub_update_on_start">Update subscriptions on launch</string>
     <string name="v2box_sub_update_summary">Update enabled subscriptions when V2BOX opens</string>
+    <string name="v2box_subscription_details">Subscription balance</string>
     <string name="v2box_instagram">Instagram · mobile.tina2</string>
     <string name="v2box_remaining">Remaining: %1$s</string>
     <string name="v2box_expiration">Expires: %1$s</string>

@@ -4,7 +4,7 @@
 
 - Target: `mtpali/v2box`, working branch `v2box-development`.
 - Base: `2dust/v2rayNG` tag `2.2.6`, commit `15b4fff8e45da9bc0acaa5cc1d80a1d3531e8712`; its source and GPL license were imported.
-- References consulted: `mtpali/MobileTinaVPN` (Smart Connect and subscription metadata behavior) and `mtpali/v2rayNG` (the user's previous build). V2BOX is implemented on the upstream 2.2.6 base; no binary from the personal references is bundled.
+- Reference consulted: `mtpali/MobileTinaVPN` (Smart Connect and subscription metadata behavior). The user also provided `mtpali/v2rayNG` as a previous build reference. V2BOX is implemented on the upstream 2.2.6 base; no binary from the personal references is bundled.
 - Pinned AndroidLibXrayLite submodule: `3b5a9c858c4dc98b7079cefb1380537b6b5c155c` (`v26.7.5`); hev tunnel is built from the pinned submodule.
 
 ## Implemented in this development branch
@@ -15,9 +15,9 @@
 - Smart Connect uses the real ping service to choose the lowest positive result; it runs only when enabled. An inactive toggle starts the selected config normally. Tests have a 25-second timeout and the operation is cancelable.
 - Automatic ping sorting is enabled by default in both the UI and the MMKV read path, with a Configs switch; sorting applies to each subscription and Local.
 - Subscription update on app entry is enabled by default and runs on a background dispatcher only if an enabled subscription has a URL. Existing periodic update scheduling is preserved.
-- Standard `subscription-userinfo` headers are parsed from the same successful subscription response. Upload, download, total and expiry metadata are stored with the subscription. Remaining traffic, expiration date and days left appear on Home when present.
+- Standard `subscription-userinfo` headers are parsed from the same successful subscription response. Upload, download, total and expiry metadata are stored with the subscription. Remaining traffic, expiration date and days left appear on Home and in Settings when present.
 - Instagram tries the installed app for `mobile.tina2`, falling back to its HTTPS profile in a browser. The About and drawer actions point there too.
-- GitHub Actions builds signed debug APK artifacts for ARMv7 (`armeabi-v7a`) and ARMv8 (`arm64-v8a`), with pinned core and native build steps. The earlier workflow that ignored build failures was replaced.
+- GitHub Actions builds signed debug APK artifacts for ARMv7 (`armeabi-v7a`) and ARMv8 (`arm64-v8a`), with pinned core and native build steps. The earlier workflow that ignored build failures was replaced. A CI step checks the installed package, version and native ABI of both artifacts.
 
 ## Files to revisit
 
@@ -28,7 +28,7 @@
 
 ## Verification and limitations
 
-- Resource XML parsed successfully and `git diff --check` passed locally. The local environment cannot reach the Gradle distribution, so compilation must be checked in GitHub Actions. The workflow result and artifact URLs will be recorded after a run.
+- Resource XML parsed successfully and `git diff --check` passed locally. The local environment cannot reach the Gradle distribution, so compilation was checked in GitHub Actions. The first development run succeeded on 2026-09-26: [run 36220594488](https://github.com/mtpali/v2box/actions/runs/36220594488), creating both architecture artifacts. The arm64 APK was inspected and contained only `arm64-v8a` native libraries and an APK signing block. A subsequent run will verify the final polish commit.
 - The previously uploaded `icon.png` and ten UI screenshots are not available as files in this Codex workspace. A centered V2BOX vector placeholder avoids showing the upstream icon; replace it with the exact supplied image once it is attached here. Pixel alignment with the screenshot references is therefore not verified.
 - Home upload/download numbers use Android app UID counters from the current connection session. These include app network traffic and are an approximation of tunnel usage; provider traffic quota uses subscription headers.
 - Actions artifacts are debug signed. A persistent release keystore is needed for APKs that can upgrade across runs without reinstalling.

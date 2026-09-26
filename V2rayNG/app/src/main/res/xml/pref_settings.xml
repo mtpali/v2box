@@ -293,6 +293,11 @@
             android:summary="@string/v2box_sub_update_summary"
             android:title="@string/v2box_sub_update_on_start" />
 
+        <Preference
+            android:key="pref_subscription_info"
+            android:selectable="false"
+            android:title="@string/v2box_subscription_details" />
+
         <CheckBoxPreference
             android:key="pref_is_booted"
             android:summary="@string/summary_pref_is_booted"

@@ -89,7 +89,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setupToolbar(binding.toolbar, false, getString(R.string.title_server))
+        setupToolbar(binding.toolbar, false, getString(R.string.app_name))
 
         // setup viewpager and tablayout
         groupPagerAdapter = GroupPagerAdapter(this, emptyList())
@@ -127,11 +127,15 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 R.id.nav_home -> {
                     binding.homeContent.isVisible = true
                     binding.configContent.isVisible = false
+                    binding.toolbar.title = getString(R.string.app_name)
+                    invalidateOptionsMenu()
                     true
                 }
                 R.id.nav_configs -> {
                     binding.homeContent.isVisible = false
                     binding.configContent.isVisible = true
+                    binding.toolbar.title = getString(R.string.v2box_configs)
+                    invalidateOptionsMenu()
                     true
                 }
                 R.id.nav_settings -> {
@@ -314,6 +318,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 if (best == null) toast(R.string.v2box_smart_unavailable)
                 else {
                     MmkvManager.setSelectServer(best.first)
+                    refreshSelectedServer()
                     startSelectedServer()
                     started = true
                 }
@@ -361,6 +366,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun applyRunningState(isLoading: Boolean, isRunning: Boolean) {
+        refreshSelectedServer()
         if (isLoading) {
             binding.fab.setImageResource(R.drawable.ic_fab_check)
             binding.tvHomeStatus.setText(R.string.connection_test_testing)
@@ -394,6 +400,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onResume() {
         super.onResume()
+        refreshSelectedServer()
         binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)
         binding.switchAutoSort.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, true)
         refreshSubscriptionInfo()
@@ -451,6 +458,18 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         binding.tvSubscription.isVisible = parts.isNotEmpty()
         binding.tvSubscription.text = parts.joinToString("\n")
+    }
+
+    private fun refreshSelectedServer() {
+        val selected = MmkvManager.getSelectServer()?.let { MmkvManager.decodeServerConfig(it) }
+        binding.tvSelectedServer.text = selected?.remarks?.takeIf { it.isNotBlank() }
+            ?: getString(R.string.v2box_no_server)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val showConfigActions = binding.configContent.isVisible
+        for (index in 0 until menu.size()) menu.getItem(index).isVisible = showConfigActions
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
