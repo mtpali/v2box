@@ -1,70 +1,34 @@
 # V2BOX Development Status
 
-## Project
-V2BOX Android VPN client based on v2rayNG 2.2.6.
+## Source and repository
 
-## Target Identity
-- Application name: V2BOX
-- Package name: com.v2box.mobiletina
-- Application version: 1
+- Target: `mtpali/v2box`, working branch `v2box-development`.
+- Base: `2dust/v2rayNG` tag `2.2.6`, commit `15b4fff8e45da9bc0acaa5cc1d80a1d3531e8712`; its source and GPL license were imported.
+- References consulted: `mtpali/MobileTinaVPN` (Smart Connect and subscription metadata behavior) and `mtpali/v2rayNG` (the user's previous build). V2BOX is implemented on the upstream 2.2.6 base; no binary from the personal references is bundled.
+- Pinned AndroidLibXrayLite submodule: `3b5a9c858c4dc98b7079cefb1380537b6b5c155c` (`v26.7.5`); hev tunnel is built from the pinned submodule.
 
-## Migration Progress
+## Implemented in this development branch
 
-### Repository Preparation
-- Target repository initialized.
-- Development tracking document created.
-- GitHub Actions Android build workflow added.
+- Application ID and Kotlin namespace: `com.v2box.mobiletina`; source and shortcut class names moved accordingly. App label `V2BOX`, `versionName=1`, `versionCode=1`.
+- Only English and Persian are exposed. Other app translation directories were removed. Android RTL support is disabled and the window layout direction is set to LTR. Existing light and night themes remain.
+- Home/Configs/Settings bottom navigation. Home displays status, connection duration, app UID upload/download counts, Smart Connect toggle, Routing and Instagram `mobile.tina2`. Configs retains original import, list, ping and subscription functions, with Local and subscription tabs.
+- Smart Connect uses the real ping service to choose the lowest positive result; it runs only when enabled. An inactive toggle starts the selected config normally. Tests have a 25-second timeout and the operation is cancelable.
+- Automatic ping sorting is enabled by default in both the UI and the MMKV read path, with a Configs switch; sorting applies to each subscription and Local.
+- Subscription update on app entry is enabled by default and runs on a background dispatcher only if an enabled subscription has a URL. Existing periodic update scheduling is preserved.
+- Standard `subscription-userinfo` headers are parsed from the same successful subscription response. Upload, download, total and expiry metadata are stored with the subscription. Remaining traffic, expiration date and days left appear on Home when present.
+- Instagram tries the installed app for `mobile.tina2`, falling back to its HTTPS profile in a browser. The About and drawer actions point there too.
+- GitHub Actions builds signed debug APK artifacts for ARMv7 (`armeabi-v7a`) and ARMv8 (`arm64-v8a`), with pinned core and native build steps. The earlier workflow that ignored build failures was replaced.
 
-### Source Migration
-- Base source: v2rayNG 2.2.6.
-- Reference migration source: mtpali/v2rayNG.
-- Reference feature source: mtpali/MobileTinaVPN.
-- Smart Connect implementation source identified for integration.
+## Files to revisit
 
-### Branding
-- Replace original v2rayNG branding with V2BOX branding.
-- Replace application icon with provided icon.png.
-- Configure adaptive icon scaling to avoid excessive zoom.
+- `V2rayNG/app/src/main/java/com/v2box/mobiletina/ui/MainActivity.kt`: dashboard, connection mode, startup refresh, traffic and metadata display.
+- `V2rayNG/app/src/main/java/com/v2box/mobiletina/handler/V2BoxSubscriptionInfo.kt`, `AngConfigManager.kt`, and `util/HttpUtil.kt`: metadata capture and parsing.
+- `V2rayNG/app/src/main/res/layout/activity_main.xml`, `res/xml/pref_settings.xml`, `res/menu/menu_v2box_bottom.xml`: main navigation and settings.
+- `.github/workflows/android-build.yml`: reproducible debug artifact build.
 
-### UI
-- Implement V2BOX interface matching provided Android and iOS references.
-- Support Dark Mode and Light Mode.
-- Keep layout direction LTR only.
-- Keep only English and Persian languages.
+## Verification and limitations
 
-### Home Screen
-- Duration display.
-- Upload and Download statistics.
-- Smart Connect switch.
-- Routing entry.
-- Replace Telegram Community with Instagram:
-  - Username: mobile.tina2
-
-### Config Management
-- Automatic sorting by ping enabled by default.
-- Subscription grouping.
-- Ping display for nodes.
-
-### Smart Connect
-- Integrate Smart Connect logic from MobileTinaVPN.
-- Run Smart Connect only when enabled by user settings.
-
-### Subscription
-- Add automatic subscription update option in Settings.
-- Enabled by default.
-- Execute update on application startup when subscription URL exists.
-- Display remaining traffic and expiration time when available.
-
-### Build
-- GitHub Actions build workflow prepared.
-- ARMv7 and ARMv8 APK output configuration prepared.
-
-## References
-- Base project: v2rayNG 2.2.6
-- Previous custom projects:
-  - mtpali/v2rayNG
-  - mtpali/MobileTinaVPN
-
-## Current Stage
-- Migration workspace prepared.
-- Source integration in progress.
+- Resource XML parsed successfully and `git diff --check` passed locally. The local environment cannot reach the Gradle distribution, so compilation must be checked in GitHub Actions. The workflow result and artifact URLs will be recorded after a run.
+- The previously uploaded `icon.png` and ten UI screenshots are not available as files in this Codex workspace. A centered V2BOX vector placeholder avoids showing the upstream icon; replace it with the exact supplied image once it is attached here. Pixel alignment with the screenshot references is therefore not verified.
+- Home upload/download numbers use Android app UID counters from the current connection session. These include app network traffic and are an approximation of tunnel usage; provider traffic quota uses subscription headers.
+- Actions artifacts are debug signed. A persistent release keystore is needed for APKs that can upgrade across runs without reinstalling.
