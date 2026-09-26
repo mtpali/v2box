@@ -1,5 +1,14 @@
 # V2BOX Development Status
 
+## راهنمای دانلود در GitHub
+
+1. برای گرفتن همین فایل، در صفحهٔ [V2BOX_DEVELOPMENT_STATUS.md](https://github.com/mtpali/v2box/blob/main/V2BOX_DEVELOPMENT_STATUS.md) روی دکمهٔ **Download raw file** (علامت پیکان رو به پایین کنار **Raw**) بزنید.
+2. برای APK به صفحهٔ [اجرای موفق ساخت در GitHub Actions](https://github.com/mtpali/v2box/actions/runs/36221357502) بروید و اگر لازم شد به حساب GitHub وارد شوید.
+3. پایین صفحه، بخش **Artifacts** را باز کنید. برای گوشی‌های جدیدتر روی **V2BOX-1-arm64-v8a** و برای دستگاه‌های ARMv7 روی **V2BOX-1-armeabi-v7a** بزنید.
+4. GitHub فایل را به شکل ZIP می‌دهد؛ فایل ZIP را باز کنید و APK داخل آن را استخراج و نصب کنید.
+
+اگر در مخزن بخش **Releases** و نسخهٔ **V2BOX 1 preview** را می‌بینید، می‌توانید به جای ZIP از بخش **Assets** همان نسخه، APK مناسب پردازندهٔ گوشی را بردارید.
+
 ## Source and repository
 
 - Target: `mtpali/v2box`, implemented on `v2box-development` and merged into `main` via [PR #1](https://github.com/mtpali/v2box/pull/1). Merge commit: `b22a0220ac9cc4360ab46c28432daf0707d0139e`.
