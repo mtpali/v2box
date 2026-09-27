@@ -10,6 +10,7 @@
     <color name="v2box_selected">#B1E3EF</color>
     <color name="v2box_success">#087A64</color>
     <color name="v2box_ping_error">#BA1A1A</color>
+    <color name="v2box_dialog_stroke">#389BCB</color>
     <color name="v2box_control">#E7E7E9</color>
     <color name="colorPing">#009966</color>
     <color name="colorPingRed">#FF0099</color>

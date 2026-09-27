@@ -2,6 +2,7 @@ package com.v2box.mobiletina.ui
 
 import android.content.Intent
 import android.app.ActivityManager
+import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.net.Uri
@@ -78,6 +79,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     private var waitingForStatusPing = false
     private var subscriptionRefreshing = false
     private var subscriptionIdsBeforeEditor: Set<String>? = null
+    private var firstLaunchPromoDialog: Dialog? = null
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -223,7 +225,17 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             }
         }
 
-        checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) {
+        binding.root.post {
+            if (isFinishing || isDestroyed) return@post
+            firstLaunchPromoDialog = MobileTinaFirstLaunchDialog.showOnce(this) {
+                firstLaunchPromoDialog = null
+                if (!isFinishing && !isDestroyed) {
+                    checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) { }
+                }
+            }
+            if (firstLaunchPromoDialog == null) {
+                checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) { }
+            }
         }
     }
 
@@ -1126,6 +1138,9 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onDestroy() {
+        firstLaunchPromoDialog?.setOnDismissListener(null)
+        firstLaunchPromoDialog?.dismiss()
+        firstLaunchPromoDialog = null
         tabMediator?.detach()
         super.onDestroy()
     }

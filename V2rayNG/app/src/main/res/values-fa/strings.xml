@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v2box_dialog_close">بستن</string>
     <string name="v2box_home">خانه</string>
     <string name="v2box_configs">کانفیگ‌ها</string>
     <string name="v2box_local">موبایل تینا</string>

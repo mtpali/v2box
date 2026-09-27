@@ -6,8 +6,9 @@ import android.content.Intent
 import android.net.Uri
 
 object InstagramLink {
-    fun open(context: Context) {
-        val webUrl = SocialVault.a(1)
+    fun open(context: Context, profileIndex: Int = 1) {
+        require(profileIndex in 0..1)
+        val webUrl = SocialVault.a(profileIndex)
         val username = Uri.parse(webUrl).lastPathSegment ?: return
         try {
             context.startActivity(Intent(Intent.ACTION_VIEW,
