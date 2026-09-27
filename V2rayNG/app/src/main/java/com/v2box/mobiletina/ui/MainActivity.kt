@@ -460,7 +460,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         ))
         smartConnectJob = lifecycleScope.launch {
             binding.btnConnect.setText(R.string.v2box_choosing_button)
-            binding.btnConnect.setContentDescription(R.string.v2box_choosing)
+            binding.btnConnect.contentDescription = getString(R.string.v2box_choosing)
             var started = false
             try {
                 var firstPositiveAt = 0L
