@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,13 @@ class MainRecyclerAdapter(
 
             //Name address
             holder.itemMainBinding.tvName.text = profile.remarks
+            holder.itemMainBinding.tvName.setOnLongClickListener {
+                AlertDialog.Builder(context)
+                    .setMessage(profile.remarks)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+                true
+            }
             holder.itemMainBinding.tvStatistics.text = getAddress(profile)
             holder.itemMainBinding.tvType.text = profile.configType.name
 
