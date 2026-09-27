@@ -64,7 +64,7 @@
                     android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:breakStrategy="highQuality"
+                    android:breakStrategy="high_quality"
                     android:gravity="start"
                     android:hyphenationFrequency="none"
                     android:textColor="@color/v2box_text"
