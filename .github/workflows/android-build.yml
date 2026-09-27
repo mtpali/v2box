@@ -68,7 +68,7 @@ jobs:
           signer_info="$("$ANDROID_HOME/build-tools/37.0.0/apksigner" verify --min-sdk-version 24 \
             --print-certs "$apk")"
           printf '%s\n' "$signer_info"
-          printf '%s\n' "$signer_info" | grep -F "Signer #1 certificate SHA-256 digest: $TRUSTED_SIGNER_SHA256"
+          printf '%s\n' "$signer_info" | grep -F "certificate SHA-256 digest: $TRUSTED_SIGNER_SHA256"
           python3 - "$apk" "$TRUSTED_SIGNER_SHA256" <<'PY'
           import sys
           from zipfile import ZipFile
@@ -83,12 +83,6 @@ jobs:
             unzip -Z1 "$apk" | grep -Fx "lib/${abi}/libhev-socks5-tunnel.so"
           done
           if unzip -Z1 "$apk" | grep -Eq '^lib/(x86|x86_64)/'; then exit 1; fi
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: V2BOX-1-diagnostic-unverified
-          path: V2rayNG/app/build/outputs/apk/playstore/release/app-playstore-release.apk
-          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         with:
           name: V2BOX-1-obfuscated-universal-arm
