@@ -58,13 +58,6 @@ class MainRecyclerAdapter(
 
             //Name address
             holder.itemMainBinding.tvName.text = profile.remarks
-            holder.itemMainBinding.tvName.setOnLongClickListener {
-                AlertDialog.Builder(context)
-                    .setMessage(profile.remarks)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show()
-                true
-            }
             holder.itemMainBinding.tvStatistics.text = getAddress(profile)
             holder.itemMainBinding.tvType.text = profile.configType.name
 
@@ -130,6 +123,13 @@ class MainRecyclerAdapter(
 
             holder.itemMainBinding.infoContainer.setOnClickListener {
                 adapterListener?.onSelectServer(guid)
+            }
+            holder.itemMainBinding.infoContainer.setOnLongClickListener {
+                AlertDialog.Builder(context)
+                    .setMessage(profile.remarks)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+                true
             }
         }
 
