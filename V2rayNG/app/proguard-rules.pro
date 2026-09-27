@@ -26,3 +26,9 @@
     <fields>;
 }
 -keepattributes Signature,InnerClasses,EnclosingMethod
+
+# The tunnel library resolves these exact JVM class/method names through JNI.
+-keep class com.v2box.mobiletina.service.TProxyService { *; }
+-keep class com.v2box.mobiletina.service.TProxyService$Companion { *; }
+# gomobile's native bridge resolves its generated libv2ray wrapper classes by name.
+-keep class libv2ray.** { *; }
