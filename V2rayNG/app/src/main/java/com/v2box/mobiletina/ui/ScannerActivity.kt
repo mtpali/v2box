@@ -12,6 +12,7 @@ import com.v2box.mobiletina.extension.toast
 import com.v2box.mobiletina.handler.MmkvManager
 import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.QRCodeDecoder
+import com.v2box.mobiletina.util.SocialVault
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
@@ -25,7 +26,7 @@ class ScannerActivity : HelperBaseActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentViewWithToolbar(binding.root, showHomeAsUp = true, title = getString(R.string.v2box_scanner_hint))
+        setContentViewWithToolbar(binding.root, showHomeAsUp = true, title = SocialVault.a(20))
 
         if (MmkvManager.decodeSettingsBool(AppConfig.PREF_START_SCAN_IMMEDIATE, true)) {
             launchScan()
@@ -39,7 +40,7 @@ class ScannerActivity : HelperBaseActivity() {
                 setShowTorchToggle(true) // show or hide (default) torch/flashlight toggle button
                 setShowCloseButton(true) // show or hide (default) close button
                 setBarcodeFormats(listOf(BarcodeFormat.QR_CODE))
-                setOverlayStringRes(R.string.v2box_scanner_hint)
+                setOverlayStringRes(R.string.title_qr_code)
             }
         )
     }

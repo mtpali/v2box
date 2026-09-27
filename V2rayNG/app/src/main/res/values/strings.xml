@@ -20,13 +20,8 @@
     <string name="v2box_sub_update_on_start">Update subscriptions on launch</string>
     <string name="v2box_sub_update_summary">Update enabled subscriptions when V2BOX opens</string>
     <string name="v2box_subscription_details">Subscription balance</string>
-    <string name="v2box_instagram">Instagram</string>
-    <string name="v2box_home_instagram">Instagram</string>
     <string name="v2box_smart_button">Smart Connect</string>
     <string name="v2box_sort_ping">sort by ping</string>
-    <string name="v2box_subscription_heading">instagram : mobile.tina2</string>
-    <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
-    <string name="v2box_about_settings">instagram : mobile.tina</string>
     <string name="v2box_quick_settings">QUICK SETTINGS</string>
     <string name="v2box_device">DEVICE</string>
     <string name="v2box_device_id">Device ID</string>
@@ -43,7 +38,6 @@
     <string name="v2box_link_copied">Subscription link copied</string>
     <string name="v2box_copy_subscription_link">Copy subscription link</string>
     <string name="v2box_subscription_link">Subscription link</string>
-    <string name="v2box_drawer_instagram">Instagram Mobile Tina</string>
     <string name="v2box_subscription_info">%1$s · %2$s</string>
     <string name="app_widget_name">V2BOX</string>
     <string name="app_tile_name">V2BOX</string>
@@ -312,7 +306,6 @@
     <string name="toast_tg_app_not_found">Telegram app not found</string>
     <string name="title_privacy_policy">Privacy policy</string>
     <string name="title_qr_code">QR code</string>
-    <string name="title_about">Mobile Tina</string>
     <string name="title_source_code">Source code</string>
     <string name="title_oss_license">Open Source licenses</string>
 
@@ -522,13 +515,6 @@
     <string name="v2box_clear_app">Clear App</string>
     <string name="v2box_clear_app_confirm">Remove all configs, subscriptions and app settings? This cannot be undone.</string>
     <string name="v2box_advanced_settings">Settings</string>
-    <string name="v2box_instagram_prefix">instagram :</string>
-    <string name="v2box_drawer_title">Instagram</string>
-    <string name="mobiletina_store_about_title" translatable="false">درباره موبایل تینا</string>
-    <string name="mobiletina_store_page_title" translatable="false">درباره ما</string>
-    <string name="mobiletina_store_address_section" translatable="false">آدرس فروشگاه</string>
-    <string name="mobiletina_store_address_branch_1" translatable="false">شعبه اول : کتالم ، جنب دبستان شهید بهشتی</string>
-    <string name="mobiletina_store_address_branch_2" translatable="false">شعبه دوم : رامسر ، ابریشم محله ، جنب بانک رفاه</string>
     <string name="v2box_action_edit">Edit</string>
     <string name="v2box_action_share">Share</string>
     <string name="v2box_action_delete">Delete</string>

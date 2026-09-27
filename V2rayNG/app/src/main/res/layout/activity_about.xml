@@ -16,7 +16,6 @@
         android:layoutDirection="locale"
         app:navigationIcon="@drawable/ic_mobiletina_back_24dp"
         app:navigationIconTint="#FFFFFF"
-        app:title="@string/title_about"
         app:titleTextColor="#FFFFFF" />
 
     <ScrollView
@@ -36,11 +35,11 @@
             android:paddingBottom="28dp">
 
             <TextView
+                android:id="@+id/b5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="8dp"
-                android:text="@string/mobiletina_store_page_title"
                 android:textDirection="rtl"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp"
@@ -202,11 +201,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:id="@+id/b6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingBottom="14dp"
-                android:text="@string/mobiletina_store_address_section"
                 android:textDirection="rtl"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
@@ -222,11 +221,11 @@
                 app:strokeColor="#333840"
                 app:strokeWidth="1dp">
                 <TextView
+                    android:id="@+id/b7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:padding="18dp"
-                    android:text="@string/mobiletina_store_address_branch_1"
                     android:textDirection="rtl"
                     android:textColor="#D9DDE2"
                     android:textSize="14sp" />
@@ -241,11 +240,11 @@
                 app:strokeColor="#333840"
                 app:strokeWidth="1dp">
                 <TextView
+                    android:id="@+id/b8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:padding="18dp"
-                    android:text="@string/mobiletina_store_address_branch_2"
                     android:textDirection="rtl"
                     android:textColor="#D9DDE2"
                     android:textSize="14sp" />

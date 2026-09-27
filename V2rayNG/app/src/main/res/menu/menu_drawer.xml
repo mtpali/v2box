@@ -21,7 +21,7 @@
         <item android:id="@+id/settings" android:icon="@drawable/ic_settings_24dp" android:title="@string/title_settings" />
     </group>
     <group android:id="@+id/drawer_group_about">
-        <item android:id="@+id/about" android:icon="@drawable/ic_instagram_24dp" android:title="@string/v2box_about_settings" />
+        <item android:id="@+id/about" android:icon="@drawable/ic_instagram_24dp" android:title="@string/title_settings" />
     </group>
     <group android:id="@+id/drawer_group_clear">
         <item android:id="@+id/clear_app" android:icon="@drawable/ic_delete_24dp" android:title="@string/v2box_clear_app" />

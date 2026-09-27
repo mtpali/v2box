@@ -27,6 +27,7 @@ import com.v2box.mobiletina.handler.MmkvManager
 import com.v2box.mobiletina.handler.SettingsManager
 import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.MessageUtil
+import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -241,7 +242,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
         groups.add(GroupMapItem(id = AppConfig.DEFAULT_SUBSCRIPTION_ID,
-            remarks = context.getString(R.string.v2box_local)))
+            remarks = if (SettingsManager.getLocale().language == "fa")
+                SocialVault.a(18) else context.getString(R.string.v2box_local)))
         // The built-in default subscription is already represented by Local above.
         subscriptions.filter { it.guid != AppConfig.DEFAULT_SUBSCRIPTION_ID }.forEach { sub ->
             groups.add(

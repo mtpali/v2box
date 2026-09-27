@@ -14,7 +14,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:paddingTop="@dimen/padding_spacing_dp8"
-        android:text="@string/v2box_drawer_title"
         android:textColor="@android:color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 

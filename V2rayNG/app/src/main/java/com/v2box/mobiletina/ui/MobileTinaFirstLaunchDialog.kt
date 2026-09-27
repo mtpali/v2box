@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -65,6 +67,8 @@ internal object MobileTinaFirstLaunchDialog {
                 text = label
                 isAllCaps = false
                 textSize = 14f
+                typeface = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    Typeface.create(typeface, 600, false) else Typeface.create(typeface, Typeface.BOLD)
                 layoutDirection = View.LAYOUT_DIRECTION_LTR
                 textDirection = View.TEXT_DIRECTION_LTR
                 setTextColor(textColor)
@@ -91,6 +95,8 @@ internal object MobileTinaFirstLaunchDialog {
             setText(R.string.v2box_dialog_close)
             isAllCaps = false
             textSize = 14f
+            typeface = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                Typeface.create(typeface, 600, false) else Typeface.create(typeface, Typeface.BOLD)
             setTextColor(Color.WHITE)
             backgroundTintList = ColorStateList.valueOf(blue)
             cornerRadius = dp(activity, 14)

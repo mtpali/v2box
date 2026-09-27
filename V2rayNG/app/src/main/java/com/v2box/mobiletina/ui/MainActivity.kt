@@ -80,6 +80,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     private var subscriptionRefreshing = false
     private var subscriptionIdsBeforeEditor: Set<String>? = null
     private var firstLaunchPromoDialog: Dialog? = null
+    private val primarySocialAccount by lazy { Uri.parse(SocialVault.a(0)).lastPathSegment.orEmpty() }
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -168,10 +169,12 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.rowAdvancedSettings.setOnClickListener { openAdvancedSettings() }
         binding.rowAbout.setOnClickListener { startActivity(Intent(this, AboutActivity::class.java)) }
         binding.btnInstagram.setOnClickListener { InstagramLink.open(this) }
-        val socialLabel = getString(R.string.v2box_instagram_prefix) + " " +
+        val socialLabel = SocialVault.a(22) + " " +
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.tvInstagram.text = if (SettingsManager.getLocale().language == "fa")
-            getString(R.string.v2box_home_instagram) else socialLabel
+            SocialVault.a(18) else socialLabel
+        binding.rowAbout.text = SocialVault.a(if (SettingsManager.getLocale().language == "fa") 18 else 19)
+        binding.navView.menu.findItem(R.id.about)?.title = binding.rowAbout.text
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -376,7 +379,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 }
             }
             card.groupSummary.text = details.joinToString("  ·  ").ifBlank {
-                getString(R.string.v2box_instagram_prefix) + " " +
+                SocialVault.a(22) + " " +
                     Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
             }
             card.root.strokeWidth = if (index == binding.viewPager.currentItem) resources.displayMetrics.density.toInt().coerceAtLeast(1) else 0
@@ -402,8 +405,9 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun displayGroupRemarks(group: GroupMapItem): String =
-        if (group.remarks.equals("mobile.tina", ignoreCase = true))
-            getString(R.string.v2box_subscription_heading) else group.remarks
+        if (group.remarks.equals(primarySocialAccount, ignoreCase = true))
+            SocialVault.a(if (SettingsManager.getLocale().language == "fa") 21 else 20)
+        else group.remarks
 
     private fun showSubscriptionActions(group: GroupMapItem) {
         val sub = MmkvManager.decodeSubscription(group.id) ?: return

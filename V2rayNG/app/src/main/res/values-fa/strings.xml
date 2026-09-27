@@ -3,7 +3,6 @@
     <string name="v2box_dialog_close">بستن</string>
     <string name="v2box_home">خانه</string>
     <string name="v2box_configs">کانفیگ‌ها</string>
-    <string name="v2box_local">موبایل تینا</string>
     <string name="v2box_home_title">V2BOX</string>
     <string name="v2box_no_server">کانفیگی انتخاب نشده است</string>
     <string name="v2box_duration">مدت اتصال</string>
@@ -19,13 +18,8 @@
     <string name="v2box_sub_update_on_start">به‌روزرسانی اشتراک هنگام ورود</string>
     <string name="v2box_sub_update_summary">اشتراک‌های فعال را هنگام باز شدن V2BOX به‌روز کن</string>
     <string name="v2box_subscription_details">مانده اشتراک</string>
-    <string name="v2box_instagram">اینستاگرام</string>
-    <string name="v2box_home_instagram">موبایل تینا</string>
     <string name="v2box_smart_button">اتصال هوشمند</string>
     <string name="v2box_sort_ping">مرتب‌سازی</string>
-    <string name="v2box_subscription_heading">اطلاعات اشتراک</string>
-    <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
-    <string name="v2box_about_settings">موبایل تینا</string>
     <string name="v2box_quick_settings">تنظیمات سریع</string>
     <string name="v2box_device">دستگاه</string>
     <string name="v2box_device_id">شناسهٔ دستگاه</string>
@@ -42,7 +36,6 @@
     <string name="v2box_link_copied">لینک اشتراک کپی شد</string>
     <string name="v2box_copy_subscription_link">کپی لینک اشتراک</string>
     <string name="v2box_subscription_link">لینک اشتراک</string>
-    <string name="v2box_drawer_instagram">اینستاگرام موبایل تینا</string>
     <string name="v2box_subscription_info">%1$s · %2$s</string>
     <string name="app_widget_name">V2BOX</string>
     <string name="app_tile_name">V2BOX</string>
@@ -303,7 +296,6 @@
 
     <string name="title_privacy_policy">حریم خصوصی</string>
     <string name="title_qr_code">QR code</string>
-    <string name="title_about">موبایل تینا</string>
     <string name="title_source_code">کد منبع</string>
     <string name="title_oss_license">مجوز های منبع باز</string>
 
@@ -499,8 +491,6 @@
     <string name="v2box_clear_app">پاکسازی برنامه</string>
     <string name="v2box_clear_app_confirm">همهٔ کانفیگ‌ها، اشتراک‌ها و تنظیمات برنامه پاک شوند؟ این کار قابل بازگشت نیست.</string>
     <string name="v2box_advanced_settings">تنظیمات</string>
-    <string name="v2box_instagram_prefix">instagram :</string>
-    <string name="v2box_drawer_title">Instagram</string>
     <string name="v2box_action_edit">ویرایش</string>
     <string name="v2box_action_share">اشتراک</string>
     <string name="v2box_action_delete">حذف</string>
