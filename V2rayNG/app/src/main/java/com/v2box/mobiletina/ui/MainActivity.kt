@@ -77,6 +77,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     private var downloadedAt = 0L
     private var waitingForStatusPing = false
     private var subscriptionRefreshing = false
+    private var subscriptionIdsBeforeEditor: Set<String>? = null
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -90,8 +91,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             restartV2Ray()
         }
         if (SettingsChangeManager.consumeSetupGroupTab()) {
+            selectNewSubscription(subscriptionIdsBeforeEditor)
             setupGroupTab()
         }
+        subscriptionIdsBeforeEditor = null
     }
 
 
@@ -283,6 +286,18 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
         binding.tabGroup.isVisible = false
         refreshGroupTabTitles(true)
+    }
+
+    /** Switch away from an empty Local list only when a new subscription is added. */
+    private fun emptyLocalIsShowing(): Boolean =
+        MmkvManager.decodeServerList(AppConfig.DEFAULT_SUBSCRIPTION_ID).isEmpty() &&
+            groupPagerAdapter.groups.getOrNull(binding.viewPager.currentItem)?.id == AppConfig.DEFAULT_SUBSCRIPTION_ID
+
+    private fun selectNewSubscription(previousIds: Set<String>?) {
+        if (previousIds == null) return
+        MmkvManager.decodeSubscriptions().firstOrNull {
+            it.guid != AppConfig.DEFAULT_SUBSCRIPTION_ID && it.guid !in previousIds
+        }?.let { mainViewModel.subscriptionIdChanged(it.guid) }
     }
 
     private fun renderGroupCards(groups: List<GroupMapItem>) {
@@ -670,6 +685,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
 
         R.id.add_subscription -> {
+            subscriptionIdsBeforeEditor = if (emptyLocalIsShowing())
+                MmkvManager.decodeSubscriptions().map { it.guid }.toSet() else null
             requestActivityLauncher.launch(Intent(this, SubEditActivity::class.java))
             true
         }
@@ -824,13 +841,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun importBatchConfig(server: String?) {
+        val importGroupId = mainViewModel.subscriptionId
+        val previousIds = if (emptyLocalIsShowing())
+            MmkvManager.decodeSubscriptions().map { it.guid }.toSet() else null
         showLoading()
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val (count, countSub) = AngConfigManager.importBatchConfig(server, mainViewModel.subscriptionId, true)
+                val (count, countSub) = AngConfigManager.importBatchConfig(server, importGroupId, true)
                 delay(500L)
                 withContext(Dispatchers.Main) {
+                    if (countSub > 0) {
+                        selectNewSubscription(previousIds)
+                        setupGroupTab()
+                    }
                     when {
                         count > 0 -> {
                             toast(getString(R.string.title_import_config_count, count))
@@ -838,7 +862,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                             refreshGroupTabTitles()
                         }
 
-                        countSub > 0 -> setupGroupTab()
+                        countSub > 0 -> Unit
                         else -> toastError(R.string.toast_failure)
                     }
                     hideLoading()

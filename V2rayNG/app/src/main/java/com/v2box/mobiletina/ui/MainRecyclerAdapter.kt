@@ -68,7 +68,7 @@ class MainRecyclerAdapter(
             holder.itemMainBinding.tvTestResult.isVisible = !holder.itemMainBinding.tvTestResult.text.isNullOrBlank()
             if ((aff?.testDelayMillis ?: 0L) < 0L) {
                 holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge_error)
-                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, R.color.md_theme_onError))
+                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, android.R.color.white))
             } else {
                 holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge)
                 holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, android.R.color.white))

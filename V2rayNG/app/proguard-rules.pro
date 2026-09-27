@@ -25,6 +25,12 @@
 -keepclassmembers class com.v2box.mobiletina.dto.** {
     <fields>;
 }
+# Gson instantiates nested config models reflectively. Some have only required
+# constructor arguments, so keeping just their fields lets R8 remove their
+# constructors and turn the classes abstract in the optimized release APK.
+-keep,allowobfuscation class com.v2box.mobiletina.dto.** {
+    <init>(...);
+}
 -keepattributes Signature,InnerClasses,EnclosingMethod
 
 # The tunnel library resolves these exact JVM class/method names through JNI.
