@@ -318,7 +318,7 @@
     <string name="title_mode_help">برای اطلاعات و راهنمایی بیشتر، روی این متن کلیک کنید</string>
     <string name="title_language">زبان</string>
     <string name="title_ui_settings">تنظیمات رابط کاربری</string>
-    <string name="title_pref_ui_mode_night">تنظیمات حالت رابط کاربری</string>
+    <string name="title_pref_ui_mode_night">تم</string>
     <string name="title_pref_use_hev_tunnel">استفاده از قابلیت Hev TUN</string>
     <string name="summary_pref_use_hev_tunnel">اگر فعال باشد، تونل VPN از hev-socks5-tunnel استفاده می‌کند؛ در غیر این صورت از xray-core استفاده خواهد شد.</string>
     <string name="title_pref_hev_tunnel_loglevel">سطح گزارشات Hev Tun</string>

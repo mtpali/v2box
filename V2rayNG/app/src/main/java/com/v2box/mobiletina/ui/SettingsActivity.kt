@@ -1,11 +1,13 @@
 package com.v2box.mobiletina.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.AppConfig.VPN
@@ -70,6 +72,10 @@ class SettingsActivity : BaseActivity() {
             addPreferencesFromResource(R.xml.pref_settings)
 
             initPreferenceSummaries()
+            findPreference<Preference>("open_per_app_settings")?.setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), PerAppProxyActivity::class.java))
+                true
+            }
 
             localDns?.setOnPreferenceChangeListener { _, any ->
                 updateLocalDns(any as Boolean)

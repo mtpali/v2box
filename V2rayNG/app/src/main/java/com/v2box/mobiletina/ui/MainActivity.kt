@@ -150,6 +150,21 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         binding.btnPingAll.setOnClickListener { mainViewModel.testAllRealPing() }
         binding.btnSortPing.setOnClickListener { sortByTestResults() }
+        binding.rowLanguage.setOnClickListener {
+            showQuickSettingChoices(
+                R.string.title_language, R.array.language_select, R.array.language_select_value,
+                AppConfig.PREF_LANGUAGE, "en"
+            )
+        }
+        binding.rowTheme.setOnClickListener {
+            showQuickSettingChoices(
+                R.string.title_pref_ui_mode_night, R.array.ui_mode_night, R.array.ui_mode_night_value,
+                AppConfig.PREF_UI_MODE_NIGHT, "0"
+            )
+        }
+        binding.rowPerAppSettings.setOnClickListener {
+            requestActivityLauncher.launch(Intent(this, PerAppProxyActivity::class.java))
+        }
         binding.rowAdvancedSettings.setOnClickListener { openAdvancedSettings() }
         binding.rowAbout.setOnClickListener { startActivity(Intent(this, AboutActivity::class.java)) }
         binding.btnInstagram.setOnClickListener { InstagramLink.open(this) }
@@ -159,7 +174,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             getString(R.string.v2box_home_instagram) else socialLabel
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
             Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
-        binding.navView.menu.findItem(R.id.promotion)?.title = getString(R.string.v2box_drawer_instagram)
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -258,6 +272,27 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
     private fun openAdvancedSettings() {
         requestActivityLauncher.launch(Intent(this, SettingsActivity::class.java))
+    }
+
+    private fun showQuickSettingChoices(
+        titleRes: Int, entriesRes: Int, valuesRes: Int, key: String, defaultValue: String
+    ) {
+        val entries = resources.getTextArray(entriesRes)
+        val values = resources.getStringArray(valuesRes)
+        val selected = values.indexOf(MmkvManager.decodeSettingsString(key, defaultValue))
+        AlertDialog.Builder(this)
+            .setTitle(titleRes)
+            .setSingleChoiceItems(entries, selected) { dialog, index ->
+                dialog.dismiss()
+                val newValue = values[index]
+                if (newValue != MmkvManager.decodeSettingsString(key, defaultValue)) {
+                    MmkvManager.encodeSettings(key, newValue)
+                    if (key == AppConfig.PREF_UI_MODE_NIGHT) SettingsManager.setNightMode()
+                    if (key == AppConfig.PREF_LANGUAGE) recreate()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun updateConnectButtonLabel() {
@@ -1117,7 +1152,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             R.id.routing_setting -> requestActivityLauncher.launch(Intent(this, RoutingSettingActivity::class.java))
             R.id.user_asset_setting -> requestActivityLauncher.launch(Intent(this, UserAssetActivity::class.java))
             R.id.settings -> requestActivityLauncher.launch(Intent(this, SettingsActivity::class.java))
-            R.id.promotion -> InstagramLink.open(this)
             R.id.backup_restore -> requestActivityLauncher.launch(Intent(this, BackupActivity::class.java))
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
             R.id.clear_app -> confirmClearApp()

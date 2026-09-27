@@ -4,14 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
@@ -61,16 +58,6 @@ internal object MobileTinaFirstLaunchDialog {
             ).apply { cornerRadius = dp(activity, 4).toFloat() }
         }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(activity, 5)).apply {
             bottomMargin = dp(activity, 19)
-        })
-
-        root.addView(TextView(activity).apply {
-            text = activity.getString(R.string.title_about)
-            setTextColor(textColor)
-            textSize = 20f
-            gravity = Gravity.CENTER
-            typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
-        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-            bottomMargin = dp(activity, 18)
         })
 
         labels.forEachIndexed { index, label ->

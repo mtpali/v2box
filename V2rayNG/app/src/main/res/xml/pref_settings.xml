@@ -20,6 +20,27 @@
         android:summary="@string/v2box_sub_update_summary"
         android:title="@string/v2box_sub_update_on_start" />
 
+    <ListPreference
+        android:defaultValue="en"
+        android:entries="@array/language_select"
+        android:entryValues="@array/language_select_value"
+        android:key="pref_language"
+        android:summary="%s"
+        android:title="@string/title_language" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/ui_mode_night"
+        android:entryValues="@array/ui_mode_night_value"
+        android:key="pref_ui_mode_night"
+        android:summary="%s"
+        android:title="@string/title_pref_ui_mode_night" />
+
+    <Preference
+        android:key="open_per_app_settings"
+        android:icon="@drawable/ic_per_apps_24dp"
+        android:title="@string/per_app_proxy_settings" />
+
     <PreferenceCategory android:title="@string/title_ui_settings">
         <CheckBoxPreference
             android:key="pref_speed_enabled"
@@ -46,22 +67,6 @@
             android:key="pref_group_all_display"
             android:summary="@string/summary_pref_group_all_display"
             android:title="@string/title_pref_group_all_display" />
-
-        <ListPreference
-            android:defaultValue="en"
-            android:entries="@array/language_select"
-            android:entryValues="@array/language_select_value"
-            android:key="pref_language"
-            android:summary="%s"
-            android:title="@string/title_language" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/ui_mode_night"
-            android:entryValues="@array/ui_mode_night_value"
-            android:key="pref_ui_mode_night"
-            android:summary="%s"
-            android:title="@string/title_pref_ui_mode_night" />
 
     </PreferenceCategory>
 

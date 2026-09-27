@@ -26,7 +26,7 @@
     <string name="v2box_sort_ping">sort by ping</string>
     <string name="v2box_subscription_heading">instagram : mobile.tina2</string>
     <string name="v2box_scanner_hint">instagram : mobile.tina2</string>
-    <string name="v2box_about_settings">instagram : mobile.tina2</string>
+    <string name="v2box_about_settings">instagram : mobile.tina</string>
     <string name="v2box_quick_settings">QUICK SETTINGS</string>
     <string name="v2box_device">DEVICE</string>
     <string name="v2box_device_id">Device ID</string>
@@ -328,7 +328,7 @@
     <string name="title_mode_help">Click me for more help</string>
     <string name="title_language">Language</string>
     <string name="title_ui_settings">UI settings</string>
-    <string name="title_pref_ui_mode_night">UI mode settings</string>
+    <string name="title_pref_ui_mode_night">Theme</string>
     <string name="title_pref_use_hev_tunnel">Enable Hev TUN Feature</string>
     <string name="summary_pref_use_hev_tunnel">When enabled, TUN will use hev-socks5-tunnel; otherwise, it will use xray-core.</string>
     <string name="title_pref_hev_tunnel_loglevel">Hev Tun Log Level</string>
