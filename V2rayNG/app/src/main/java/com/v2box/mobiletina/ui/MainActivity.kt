@@ -125,6 +125,19 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.fab.setOnClickListener { handleFabAction() }
         binding.btnConnect.setOnClickListener { handleFabAction() }
         binding.layoutTest.setOnClickListener { handleLayoutTestClick() }
+        binding.tvSelectedServer.setOnClickListener {
+            val textLayout = binding.tvSelectedServer.layout
+            val lastLine = (textLayout?.lineCount ?: 0) - 1
+            if (textLayout != null && lastLine >= 0 && textLayout.getEllipsisCount(lastLine) > 0) {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.server_lab_remarks)
+                    .setMessage(binding.tvSelectedServer.text)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            } else {
+                handleLayoutTestClick()
+            }
+        }
         binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)
         binding.switchSmart.setOnCheckedChangeListener { _, enabled ->
             MmkvManager.encodeSettings(AppConfig.PREF_SMART_CONNECT, enabled)
