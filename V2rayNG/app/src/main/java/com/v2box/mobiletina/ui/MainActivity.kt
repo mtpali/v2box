@@ -153,7 +153,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.rowLanguage.setOnClickListener {
             showQuickSettingChoices(
                 R.string.title_language, R.array.language_select, R.array.language_select_value,
-                AppConfig.PREF_LANGUAGE, "en"
+                AppConfig.PREF_LANGUAGE, SettingsManager.getLocale().language
             )
         }
         binding.rowTheme.setOnClickListener {
