@@ -33,6 +33,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textDirection="firstStrong"
                 android:textColor="@color/v2box_text"
                 android:textSize="15sp" />
@@ -52,6 +53,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:gravity="start"
+                android:textAlignment="viewStart"
                 android:textDirection="locale"
                 android:textColor="@color/v2box_muted"
                 android:textSize="11sp" />
