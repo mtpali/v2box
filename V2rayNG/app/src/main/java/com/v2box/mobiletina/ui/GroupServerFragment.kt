@@ -78,10 +78,9 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
         itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback(adapter, allowSwipe = false))
         itemTouchHelper?.attachToRecyclerView(binding.recyclerView)
 
-        binding.refreshLayout.isEnabled = false
-//        binding.refreshLayout.setOnRefreshListener(this)
-//        // Set the distance to trigger sync to 160dp
-//        binding.refreshLayout.setDistanceToTriggerSync((160 * resources.displayMetrics.density).toInt())
+        binding.refreshLayout.isEnabled = true
+        binding.refreshLayout.setColorSchemeResources(R.color.v2box_accent)
+        binding.refreshLayout.setOnRefreshListener(this)
 
         mainViewModel.updateListAction.observe(viewLifecycleOwner) { index ->
             if (mainViewModel.subscriptionId != subId) {
@@ -199,23 +198,11 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
      * @param position The position in the list
      */
     private fun removeServer(guid: String, position: Int) {
-        if (guid == MmkvManager.getSelectServer()) {
-            ownerActivity.toast(R.string.toast_action_not_allowed)
-            return
-        }
-
-        if (MmkvManager.decodeSettingsBool(AppConfig.PREF_CONFIRM_REMOVE)) {
-            AlertDialog.Builder(ownerActivity).setMessage(R.string.del_config_comfirm)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    removeServerSub(guid, position)
-                }
-                .setNegativeButton(android.R.string.cancel) { _, _ ->
-                    //do noting
-                }
-                .show()
-        } else {
-            removeServerSub(guid, position)
-        }
+        // Always confirm, including for the selected or last remaining server.
+        AlertDialog.Builder(ownerActivity).setMessage(R.string.del_config_comfirm)
+            .setPositiveButton(android.R.string.ok) { _, _ -> removeServerSub(guid, position) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     /**
@@ -224,9 +211,13 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
      * @param position The position in the list
      */
     private fun removeServerSub(guid: String, position: Int) {
+        if (guid == MmkvManager.getSelectServer() && mainViewModel.isRunning.value == true) {
+            com.v2box.mobiletina.core.CoreServiceManager.stopVService(ownerActivity)
+        }
         mainViewModel.removeServer(guid)
         adapter.removeServerSub(guid, position)
         ownerActivity.refreshGroupTabTitles()
+        ownerActivity.refreshSelectedServer()
     }
 
     /**
@@ -286,8 +277,8 @@ class GroupServerFragment : BaseFragment<FragmentGroupServerBinding>(),
     }
 
     override fun onRefresh() {
-        ownerActivity.importConfigViaSub()
-        //binding.refreshLayout.isRefreshing = false
+        val indicator = binding.refreshLayout
+        ownerActivity.importConfigViaSub { indicator.isRefreshing = false }
     }
 
     /**

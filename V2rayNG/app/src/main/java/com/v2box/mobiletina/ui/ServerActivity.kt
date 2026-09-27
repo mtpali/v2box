@@ -21,6 +21,7 @@ import com.v2box.mobiletina.AppConfig.TLS
 import com.v2box.mobiletina.AppConfig.WIREGUARD_LOCAL_ADDRESS_V4
 import com.v2box.mobiletina.AppConfig.WIREGUARD_LOCAL_MTU
 import com.v2box.mobiletina.R
+import com.v2box.mobiletina.core.CoreServiceManager
 import com.v2box.mobiletina.dto.entities.ProfileItem
 import com.v2box.mobiletina.enums.EConfigType
 import com.v2box.mobiletina.enums.NetworkType
@@ -723,24 +724,16 @@ class ServerActivity : BaseActivity() {
      */
     private fun deleteServer(): Boolean {
         if (editGuid.isNotEmpty()) {
-            if (editGuid != MmkvManager.getSelectServer()) {
-                if (MmkvManager.decodeSettingsBool(AppConfig.PREF_CONFIRM_REMOVE)) {
-                    AlertDialog.Builder(this).setMessage(R.string.del_config_comfirm)
-                        .setPositiveButton(android.R.string.ok) { _, _ ->
-                            MmkvManager.removeServer(editGuid)
-                            finish()
-                        }
-                        .setNegativeButton(android.R.string.cancel) { _, _ ->
-                            // do nothing
-                        }
-                        .show()
-                } else {
+            AlertDialog.Builder(this).setMessage(R.string.del_config_comfirm)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    if (editGuid == MmkvManager.getSelectServer() && isRunning) {
+                        CoreServiceManager.stopVService(this)
+                    }
                     MmkvManager.removeServer(editGuid)
                     finish()
                 }
-            } else {
-                toast(R.string.toast_action_not_allowed)
-            }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
         return true
     }
@@ -749,7 +742,7 @@ class ServerActivity : BaseActivity() {
         menuInflater.inflate(R.menu.action_server, menu)
 
         val delButton = menu.findItem(R.id.del_config)
-        delButton?.isVisible = editGuid.isNotEmpty() && !isRunning
+        delButton?.isVisible = editGuid.isNotEmpty()
 
         return super.onCreateOptionsMenu(menu)
     }

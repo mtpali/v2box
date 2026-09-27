@@ -2,6 +2,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/v2box_icon_background" />
     <item android:drawable="@drawable/v2box_source_icon"
-        android:left="10dp" android:top="10dp"
-        android:right="10dp" android:bottom="10dp" />
+        android:left="17dp" android:top="17dp"
+        android:right="17dp" android:bottom="17dp" />
 </layer-list>

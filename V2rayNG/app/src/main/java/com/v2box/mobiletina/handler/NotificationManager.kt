@@ -30,7 +30,6 @@ object NotificationManager {
     private const val NOTIFICATION_ID = 1
     private const val NOTIFICATION_PENDING_INTENT_CONTENT = 0
     private const val NOTIFICATION_PENDING_INTENT_STOP_V2RAY = 1
-    private const val NOTIFICATION_PENDING_INTENT_RESTART_V2RAY = 2
     private const val NOTIFICATION_ICON_THRESHOLD = 3000
     private const val QUERY_INTERVAL_MS = 3000L
 
@@ -61,6 +60,7 @@ object NotificationManager {
      * Shows the notification.
      * @param currentConfig The current profile configuration.
      */
+    @Synchronized
     fun showNotification(currentConfig: ProfileItem?) {
         val service = getService() ?: return
 
@@ -76,11 +76,6 @@ object NotificationManager {
         stopV2RayIntent.`package` = AppConfig.ANG_PACKAGE
         stopV2RayIntent.putExtra("key", AppConfig.MSG_STATE_STOP)
         val stopV2RayPendingIntent = PendingIntent.getBroadcast(service, NOTIFICATION_PENDING_INTENT_STOP_V2RAY, stopV2RayIntent, flags)
-
-        val restartV2RayIntent = Intent(AppConfig.BROADCAST_ACTION_SERVICE)
-        restartV2RayIntent.`package` = AppConfig.ANG_PACKAGE
-        restartV2RayIntent.putExtra("key", AppConfig.MSG_STATE_RESTART)
-        val restartV2RayPendingIntent = PendingIntent.getBroadcast(service, NOTIFICATION_PENDING_INTENT_RESTART_V2RAY, restartV2RayIntent, flags)
 
         val channelId =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -104,11 +99,6 @@ object NotificationManager {
                 service.getString(R.string.notification_action_stop_v2ray),
                 stopV2RayPendingIntent
             )
-            .addAction(
-                R.drawable.ic_restore_24dp,
-                service.getString(R.string.title_service_restart),
-                restartV2RayPendingIntent
-            )
 
         //mBuilder?.setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE)
 
@@ -118,13 +108,16 @@ object NotificationManager {
     /**
      * Cancels the notification.
      */
-    fun cancelNotification() {
-        val service = getService() ?: return
-        service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
-
+    @Synchronized
+    fun cancelNotification(service: Service? = getService()) {
+        // Block a late speed update before removing the foreground notification.
         mBuilder = null
         speedNotificationJob?.cancel()
         speedNotificationJob = null
+        service?.stopForeground(Service.STOP_FOREGROUND_REMOVE)
+        (mNotificationManager ?: service?.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager)
+            ?.cancel(NOTIFICATION_ID)
+
         mNotificationManager = null
     }
 
@@ -164,6 +157,7 @@ object NotificationManager {
      * @param proxyTraffic The proxy traffic.
      * @param directTraffic The direct traffic.
      */
+    @Synchronized
     private fun updateNotification(contentText: String?, proxyTraffic: Long, directTraffic: Long) {
         if (mBuilder != null) {
             if (proxyTraffic < NOTIFICATION_ICON_THRESHOLD && directTraffic < NOTIFICATION_ICON_THRESHOLD) {

@@ -2,6 +2,7 @@ package com.v2box.mobiletina.handler
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.text.TextUtils
 import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.R
@@ -25,6 +26,7 @@ import com.v2box.mobiletina.util.HttpUtil
 import com.v2box.mobiletina.util.JsonUtil
 import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.QRCodeDecoder
+import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.Utils
 import java.net.URI
 
@@ -645,7 +647,7 @@ object AngConfigManager {
         }
         val uri = URI(Utils.fixIllegalUrl(url))
         val subItem = SubscriptionItem()
-        subItem.remarks = uri.fragment ?: "import sub"
+        subItem.remarks = uri.fragment ?: Uri.parse(SocialVault.a(0)).lastPathSegment.orEmpty()
         subItem.url = url
         MmkvManager.encodeSubscription("", subItem)
         return 1

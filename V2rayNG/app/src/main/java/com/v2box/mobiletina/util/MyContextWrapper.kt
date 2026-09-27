@@ -23,6 +23,7 @@ open class MyContextWrapper(base: Context?) : ContextWrapper(base) {
 
             val locale = newLocale ?: Locale.getDefault()
             configuration.setLocale(locale)
+            configuration.setLayoutDirection(locale)
             val localeList = LocaleList(locale)
             LocaleList.setDefault(localeList)
             configuration.setLocales(localeList)

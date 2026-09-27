@@ -71,6 +71,7 @@ class CoreRootService : Service(), ServiceControl {
         // to a dead listener. Synchronous on purpose — leaving rules behind breaks the net.
         RootProxyManager.stop(this)
         CoreServiceManager.stopCoreLoop()
+        com.v2box.mobiletina.handler.NotificationManager.cancelNotification(this)
     }
 
     override fun getService(): Service = this

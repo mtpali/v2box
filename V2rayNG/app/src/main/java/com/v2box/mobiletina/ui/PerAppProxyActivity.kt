@@ -71,28 +71,13 @@ class PerAppProxyActivity : BaseActivity() {
                 val apps = withContext(Dispatchers.IO) {
                     val appsList = AppManagerUtil.loadNetworkAppList(this@PerAppProxyActivity)
 
-                    val blacklistSet = viewModel.getAll()
-                    if (blacklistSet.isNotEmpty()) {
+                    val selectedPackages = viewModel.getAll()
+                    if (selectedPackages.isNotEmpty()) {
                         appsList.forEach { app ->
-                            app.isSelected = if (blacklistSet.contains(app.packageName)) 1 else 0
+                            app.isSelected = if (selectedPackages.contains(app.packageName)) 1 else 0
                         }
-                        appsList.sortedWith { p1, p2 ->
-                            when {
-                                p1.isSelected > p2.isSelected -> -1
-                                p1.isSelected < p2.isSelected -> 1
-                                p1.isSystemApp > p2.isSystemApp -> 1
-                                p1.isSystemApp < p2.isSystemApp -> -1
-                                p1.appName.lowercase() > p2.appName.lowercase() -> 1
-                                p1.appName.lowercase() < p2.appName.lowercase() -> -1
-                                p1.packageName > p2.packageName -> 1
-                                p1.packageName < p2.packageName -> -1
-                                else -> 0
-                            }
-                        }
-                    } else {
-                        val collator = Collator.getInstance()
-                        appsList.sortedWith(compareBy(collator) { it.appName })
                     }
+                    sortAppsWithPinnedFavorites(appsList)
                 }
 
                 appsAll = apps
@@ -105,6 +90,38 @@ class PerAppProxyActivity : BaseActivity() {
                 hideLoading()
             }
         }
+    }
+
+    private fun sortAppsWithPinnedFavorites(apps: List<AppInfo>): List<AppInfo> {
+        val collator = Collator.getInstance()
+        return apps.sortedWith { first, second ->
+            val firstPriority = preferredAppPriority(first.packageName)
+            val secondPriority = preferredAppPriority(second.packageName)
+            when {
+                firstPriority != secondPriority -> firstPriority.compareTo(secondPriority)
+                first.isSelected != second.isSelected -> second.isSelected.compareTo(first.isSelected)
+                first.isSystemApp != second.isSystemApp -> first.isSystemApp.compareTo(second.isSystemApp)
+                else -> {
+                    val byName = collator.compare(first.appName, second.appName)
+                    if (byName != 0) byName else first.packageName.compareTo(second.packageName)
+                }
+            }
+        }
+    }
+
+    private fun preferredAppPriority(packageName: String): Int = when (packageName) {
+        "com.instagram.android" -> 0
+        "com.whatsapp" -> 10
+        "com.whatsapp.w4b" -> 11
+        "org.telegram.messenger" -> 20
+        "org.telegram.messenger.web" -> 21
+        "org.thunderdog.challegram" -> 22
+        "com.android.chrome" -> 30
+        "com.chrome.beta" -> 31
+        "com.chrome.dev" -> 32
+        "com.chrome.canary" -> 33
+        "com.google.android.googlequicksearchbox" -> 40
+        else -> Int.MAX_VALUE
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

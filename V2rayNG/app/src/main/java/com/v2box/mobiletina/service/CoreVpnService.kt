@@ -109,7 +109,7 @@ class CoreVpnService : VpnService(), ServiceControl {
             }
         }
 
-        NotificationManager.cancelNotification()
+        NotificationManager.cancelNotification(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -398,4 +398,3 @@ class CoreVpnService : VpnService(), ServiceControl {
         }
     }
 }
-

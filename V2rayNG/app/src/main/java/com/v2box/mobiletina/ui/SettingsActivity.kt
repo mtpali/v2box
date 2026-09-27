@@ -1,26 +1,23 @@
 package com.v2box.mobiletina.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.text.format.Formatter
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.AppConfig.VPN
 import com.v2box.mobiletina.R
 import com.v2box.mobiletina.extension.toastError
 import com.v2box.mobiletina.handler.MmkvManager
-import com.v2box.mobiletina.handler.V2BoxSubscriptionInfo
 import com.v2box.mobiletina.helper.MmkvPreferenceDataStore
 import com.v2box.mobiletina.root.RootManager
 import com.v2box.mobiletina.util.Utils
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.util.Date
 
 class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +72,10 @@ class SettingsActivity : BaseActivity() {
             addPreferencesFromResource(R.xml.pref_settings)
 
             initPreferenceSummaries()
-            refreshSubscriptionBalance()
+            findPreference<Preference>("open_per_app_settings")?.setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), PerAppProxyActivity::class.java))
+                true
+            }
 
             localDns?.setOnPreferenceChangeListener { _, any ->
                 updateLocalDns(any as Boolean)
@@ -153,39 +153,6 @@ class SettingsActivity : BaseActivity() {
                 }
             }
 
-        }
-
-        override fun onResume() {
-            super.onResume()
-            refreshSubscriptionBalance()
-        }
-
-        private fun refreshSubscriptionBalance() {
-            val preference = findPreference<Preference>("pref_subscription_info") ?: return
-            val subscriptions = MmkvManager.decodeSubscriptions()
-            val selectedSubscriptionId = MmkvManager.getSelectServer()
-                ?.let { MmkvManager.decodeServerConfig(it)?.subscriptionId }
-            val activeTabId = MmkvManager.decodeSettingsString(AppConfig.CACHE_SUBSCRIPTION_ID)
-            val item = V2BoxSubscriptionInfo.selectForDisplay(
-                subscriptions, listOfNotNull(selectedSubscriptionId, activeTabId)
-            )
-            val parts = mutableListOf<String>()
-            item?.let { sub ->
-                V2BoxSubscriptionInfo.remainingBytes(sub)?.let { remaining ->
-                    parts += getString(R.string.v2box_remaining,
-                        Formatter.formatShortFileSize(requireContext(), remaining))
-                }
-                sub.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
-                    val date = DateFormat.getDateInstance(DateFormat.MEDIUM)
-                        .format(Date(epoch.coerceAtMost(Long.MAX_VALUE / 1_000) * 1_000))
-                    parts += getString(R.string.v2box_expiration, date)
-                    val days = ((epoch - System.currentTimeMillis() / 1_000)
-                        .coerceAtLeast(0L) + 86_399L) / 86_400L
-                    parts += getString(R.string.v2box_days_remaining, days)
-                }
-            }
-            preference.isVisible = parts.isNotEmpty()
-            preference.summary = parts.joinToString(" · ")
         }
 
         private fun initPreferenceSummaries() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="v2box_dialog_close">بستن</string>
     <string name="v2box_home">خانه</string>
     <string name="v2box_configs">کانفیگ‌ها</string>
-    <string name="v2box_local">محلی</string>
     <string name="v2box_home_title">V2BOX</string>
     <string name="v2box_no_server">کانفیگی انتخاب نشده است</string>
     <string name="v2box_duration">مدت اتصال</string>
@@ -11,29 +11,34 @@
     <string name="v2box_connect">اتصال</string>
     <string name="v2box_disconnect">قطع اتصال</string>
     <string name="v2box_choosing">در حال انتخاب بهترین سرور… برای لغو لمس کنید</string>
+    <string name="v2box_choosing_button">در حال اتصال…</string>
     <string name="v2box_smart_connect">اتصال هوشمند</string>
     <string name="v2box_smart_summary">بررسی سرورها و انتخاب سریع‌ترین سرور فعال</string>
     <string name="v2box_smart_unavailable">سرور فعالی پیدا نشد. کانفیگ اضافه یا بررسی کنید.</string>
     <string name="v2box_sub_update_on_start">به‌روزرسانی اشتراک هنگام ورود</string>
     <string name="v2box_sub_update_summary">اشتراک‌های فعال را هنگام باز شدن V2BOX به‌روز کن</string>
     <string name="v2box_subscription_details">مانده اشتراک</string>
-    <string name="v2box_instagram">اینستاگرام · mobile.tina2</string>
     <string name="v2box_smart_button">اتصال هوشمند</string>
-    <string name="v2box_sort_ping">مرتب‌سازی: پینگ</string>
+    <string name="v2box_sort_ping">مرتب‌سازی</string>
     <string name="v2box_quick_settings">تنظیمات سریع</string>
     <string name="v2box_device">دستگاه</string>
     <string name="v2box_device_id">شناسهٔ دستگاه</string>
     <string name="v2box_tunnel_settings">تنظیمات تونل</string>
     <string name="v2box_dns_settings">تنظیمات DNS</string>
     <string name="v2box_speed_settings">آزمایش سرعت</string>
-    <string name="v2box_no_info">اطلاعاتی موجود نیست</string>
+    <string name="v2box_no_info">اینستاگرام</string>
     <string name="v2box_group_usage">%1$s / %2$s</string>
+    <string name="v2box_group_ping">پینگ</string>
+    <string name="v2box_group_actions">گزینه‌ها</string>
     <string name="v2box_remaining">حجم باقی‌مانده: %1$s</string>
     <string name="v2box_expiration">انقضا: %1$s</string>
     <string name="v2box_days_remaining">روز باقی‌مانده: %1$d</string>
+    <string name="v2box_link_copied">لینک اشتراک کپی شد</string>
+    <string name="v2box_copy_subscription_link">کپی لینک اشتراک</string>
+    <string name="v2box_subscription_link">لینک اشتراک</string>
     <string name="v2box_subscription_info">%1$s · %2$s</string>
-    <string name="app_widget_name">تعویض</string>
-    <string name="app_tile_name">تعویض</string>
+    <string name="app_widget_name">V2BOX</string>
+    <string name="app_tile_name">V2BOX</string>
     <string name="app_tile_first_use">برای اولین استفاده از این قابلیت، لطفاً ابتدا از داخل برنامه یک سرور اضافه کنید</string>
     <string name="navigation_drawer_open">باز کردن منو کشویی</string>
     <string name="navigation_drawer_close">بستن منو کشویی</string>
@@ -43,7 +48,7 @@
     <string name="pull_down_to_refresh">برای بروزرسانی، صفحه را به پایین بکشید!</string>
 
     <!-- Notifications -->
-    <string name="notification_action_stop_v2ray">توقف</string>
+    <string name="notification_action_stop_v2ray">خاموش کردن فیلترشکن</string>
     <string name="toast_permission_denied">امکان دریافت مجوز وجود ندارد</string>
     <string name="toast_permission_denied_notification">امکان دریافت مجوز ارسال اعلان وجود ندارد</string>
     <string name="notification_action_more">برای اطلاعات بیشتر کلیک کنید</string>
@@ -215,7 +220,6 @@
     <string name="title_pref_route_only_enabled">فعال‌سازی فقط مسیر یابی (RouteOnly)</string>
     <string name="summary_pref_route_only_enabled">از نام دامنه (Snnifed) فقط برای مسیریابی استفاده کنید و آدرس مقصد را به عنوان IP ذخیره کنید.</string>
 
-
     <string name="title_pref_local_dns_enabled">فعال کردن DNS محلی</string>
     <string name="summary_pref_local_dns_enabled">درخواست های DNS به هسته وارد شده و توسط ماژول DNS پردازش می شوند (توصیه می شود در صورت نیاز به مسیریابی برای دور زدن آدرس های LAN و سرزمین اصلی فعال شود)</string>
 
@@ -287,15 +291,14 @@
     <!-- AboutActivity -->
     <string name="title_pref_feedback">بازخورد</string>
     <string name="summary_pref_feedback">بازخورد یا گزارش اشکالات در گیت‌ هاب</string>
-    <string name="summary_pref_tg_group">صفحه mobile.tina2 در اینستاگرام</string>
+
     <string name="toast_tg_app_not_found">برنامه تلگرام پیدا نشد</string>
 
     <string name="title_privacy_policy">حریم خصوصی</string>
     <string name="title_qr_code">QR code</string>
-    <string name="title_about">درباره</string>
     <string name="title_source_code">کد منبع</string>
     <string name="title_oss_license">مجوز های منبع باز</string>
-    <string name="title_tg_channel">اینستاگرام · mobile.tina2</string>
+
     <string name="title_pref_promotion">تبلیغات</string>
 
     <string name="title_pref_auto_update_subscription">به‌ روزرسانی خودکار اشتراک ها</string>
@@ -307,16 +310,12 @@
     <string name="title_mode_help">برای اطلاعات و راهنمایی بیشتر، روی این متن کلیک کنید</string>
     <string name="title_language">زبان</string>
     <string name="title_ui_settings">تنظیمات رابط کاربری</string>
-    <string name="title_pref_ui_mode_night">تنظیمات حالت رابط کاربری</string>
+    <string name="title_pref_ui_mode_night">تم</string>
     <string name="title_pref_use_hev_tunnel">استفاده از قابلیت Hev TUN</string>
     <string name="summary_pref_use_hev_tunnel">اگر فعال باشد، تونل VPN از hev-socks5-tunnel استفاده می‌کند؛ در غیر این صورت از xray-core استفاده خواهد شد.</string>
     <string name="title_pref_hev_tunnel_loglevel">سطح گزارشات Hev Tun</string>
     <string name="title_pref_hev_tunnel_rw_timeout">زمان انتظار خواندن/نوشتن Hev Tun (ثانیه) (پیش‌فرض tcp,udp 300،60)</string>
 
-    <string name="title_logcat">گزارشات</string>
-    <string name="logcat_copy">کپی</string>
-    <string name="logcat_clear">پاک کردن</string>
-    <string name="logcat_share">اشتراک‌گذاری گزارش</string>
     <string name="title_service_restart">راه‌اندازی مجدد خدمات</string>
     <string name="title_del_all_config">حذف تمام کانفیگ های گروه فعلی</string>
     <string name="title_del_duplicate_config">حذف کانفیگ های تکراری گروه فعلی</string>
@@ -335,7 +334,7 @@
     <string name="sub_setting_pre_profile_tip">لطفاً مطمئن شوید که نام مستعار وجود دارد و منحصر به فرد است</string>
     <string name="toast_invalid_update_interval">بازه بروزرسانی نامعتبر است. حداقل مقدار 15 دقیقه است.</string>
     <string name="title_sub_update">به‌روزرسانی گروه فعلی اشتراک</string>
-    <string name="title_real_ping_all_server">تاخیر واقعی کانفیگ های گروه فعلی</string>
+    <string name="title_real_ping_all_server">تست سرعت</string>
     <string name="title_user_asset_setting">فایل های منبع جغرافیایی</string>
     <string name="title_sort_by_test_results">مرتب‌ سازی بر اساس نتایج آزمایش</string>
     <string name="title_filter_config">فیلتر کردن کانفیگ‌ها</string>
@@ -379,13 +378,13 @@
     <string name="routing_settings_outbound_tag">برچسب خروجی</string>
 
     <string name="connection_test_pending">اتصال را بررسی کنید</string>
-    <string name="connection_test_testing">در حال آزمایش...</string>
+    <string name="connection_test_testing">در حال اتصال...</string>
     <string name="connection_test_testing_count">تست کردن %d کانفیگ…</string>
-    <string name="connection_test_available">موفقیت: اتصال %dms طول کشید</string>
+    <string name="connection_test_available">پینگ : %dms</string>
     <string name="connection_test_error">اتصال به اینترنت شناسایی نشد: %s</string>
     <string name="connection_test_fail">اینترنت در دسترس نیست</string>
     <string name="connection_test_error_status_code">کد خطا: #%d</string>
-    <string name="connection_connected">متصل است، برای بررسی اتصال ضربه بزنید</string>
+    <string name="connection_connected">متصل است</string>
     <string name="connection_not_connected">متصل نیست</string>
     <string name="connection_runing_task_left">تعداد وظایف آزمایشی در حال اجرا: %s</string>
 
@@ -397,13 +396,6 @@
     <string name="title_pref_fragment_interval">فاصله بین بسته های فرگمنت (حداقل-حداکثر)</string>
     <string name="title_pref_fragment_enabled">فعال کردن فرگمنت</string>
     <string name="title_pref_fragment_maxsplit">حداکثر تقسیم فرگمنت</string>
-
-    <string name="update_check_for_update">بررسی به روز رسانی</string>
-    <string name="update_already_latest_version">در حال حاضر آخرین نسخه نصب شده است</string>
-    <string name="update_new_version_found">نسخه جدید پیدا شد: %s</string>
-    <string name="update_now">اکنون به روز رسانی کنید</string>
-    <string name="update_check_pre_release">بررسی نسخه پیش از انتشار</string>
-    <string name="update_checking_for_update">در حال بررسی برای به‌روزرسانی…</string>
 
     <string name="title_policy_group_type">نوع گروه خط مشی</string>
     <string name="title_policy_group_subscription_id">از گروه اشتراک</string>
@@ -490,4 +482,18 @@
         <item>WebDAV</item>
     </string-array>
 
+    <string name="v2box_inactive">غیرفعال</string>
+    <string name="v2box_add_subscription">افزودن اشتراک</string>
+    <string name="v2box_edit_subscription">ویرایش اشتراک</string>
+    <string name="v2box_share_subscription">اشتراک‌گذاری اشتراک</string>
+    <string name="v2box_delete_subscription">حذف اشتراک</string>
+    <string name="v2box_delete_subscription_confirm">این اشتراک و سرورهای آن حذف شوند؟</string>
+    <string name="v2box_clear_app">پاکسازی برنامه</string>
+    <string name="v2box_clear_app_confirm">همهٔ کانفیگ‌ها، اشتراک‌ها و تنظیمات برنامه پاک شوند؟ این کار قابل بازگشت نیست.</string>
+    <string name="v2box_advanced_settings">تنظیمات</string>
+    <string name="v2box_action_edit">ویرایش</string>
+    <string name="v2box_action_share">اشتراک</string>
+    <string name="v2box_action_delete">حذف</string>
+    <string name="v2box_scan_qr">اسکن QR</string>
+    <string name="v2box_menu">منو</string>
 </resources>

@@ -19,3 +19,22 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Gson reads and writes configs, subscriptions, and profiles by field name.
+# Preserve serialized field names while allowing R8 to rename classes.
+-keepclassmembers class com.v2box.mobiletina.dto.** {
+    <fields>;
+}
+# Gson instantiates nested config models reflectively. Some have only required
+# constructor arguments, so keeping just their fields lets R8 remove their
+# constructors and turn the classes abstract in the optimized release APK.
+-keep,allowobfuscation class com.v2box.mobiletina.dto.** {
+    <init>(...);
+}
+-keepattributes Signature,InnerClasses,EnclosingMethod
+
+# The tunnel library resolves these exact JVM class/method names through JNI.
+-keep class com.v2box.mobiletina.service.TProxyService { *; }
+-keep class com.v2box.mobiletina.service.TProxyService$Companion { *; }
+# gomobile's native bridge resolves its generated libv2ray wrapper classes by name.
+-keep class libv2ray.** { *; }

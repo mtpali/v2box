@@ -27,6 +27,7 @@ import com.v2box.mobiletina.handler.MmkvManager
 import com.v2box.mobiletina.handler.SettingsManager
 import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.MessageUtil
+import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +43,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val isRunning by lazy { MutableLiveData<Boolean>() }
     val updateListAction by lazy { MutableLiveData<Int>() }
     val updateTestResultAction by lazy { MutableLiveData<String>() }
+    val currentPingResultAction by lazy { MutableLiveData<String>() }
 
     /**
      * Refer to the official documentation for [registerReceiver](https://developer.android.com/reference/androidx/core/content/ContextCompat#registerReceiver(android.content.Context,android.content.BroadcastReceiver,android.content.IntentFilter,int):
@@ -240,8 +242,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
         groups.add(GroupMapItem(id = AppConfig.DEFAULT_SUBSCRIPTION_ID,
-            remarks = context.getString(R.string.v2box_local)))
-        subscriptions.forEach { sub ->
+            remarks = if (SettingsManager.getLocale().language == "fa")
+                SocialVault.a(18) else context.getString(R.string.v2box_local)))
+        // The built-in default subscription is already represented by Local above.
+        subscriptions.filter { it.guid != AppConfig.DEFAULT_SUBSCRIPTION_ID }.forEach { sub ->
             groups.add(
                 GroupMapItem(
                     id = sub.guid,
@@ -341,34 +345,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Sorts servers by their test results.
      */
     fun sortByTestResults() {
-        val groups = (MmkvManager.decodeSubsList() + AppConfig.DEFAULT_SUBSCRIPTION_ID).distinct()
-        groups.forEach { guid ->
-            sortByTestResultsForSub(guid)
-        }
+        MmkvManager.sortServerListsByPing()
     }
-
-    /**
-     * Sorts servers by their test results for a specific subscription.
-     * @param subId The subscription ID to sort servers for.
-     */
-    private fun sortByTestResultsForSub(subId: String) {
-        data class ServerDelay(var guid: String, var testDelayMillis: Long)
-
-        val serverDelays = mutableListOf<ServerDelay>()
-        val serverListToSort = MmkvManager.decodeServerList(subId)
-
-        serverListToSort.forEach { key ->
-            val delay = MmkvManager.decodeServerAffiliationInfo(key)?.testDelayMillis ?: 0L
-            serverDelays.add(ServerDelay(key, if (delay <= 0L) 999999 else delay))
-        }
-        serverDelays.sortBy { it.testDelayMillis }
-
-        val sortedServerList = serverDelays.map { it.guid }.toMutableList()
-
-        // Save the sorted list for this subscription
-        MmkvManager.encodeServerList(sortedServerList, subId)
-    }
-
 
     /**
      * Initializes assets.
@@ -431,7 +409,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 AppConfig.MSG_STATE_START_SUCCESS -> {
-                    getApplication<AngApplication>().toastSuccess(R.string.toast_services_success)
                     isRunning.value = true
                 }
 
@@ -450,7 +427,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 AppConfig.MSG_MEASURE_DELAY_SUCCESS -> {
-                    updateTestResultAction.value = intent.getStringExtra("content")
+                    val result = intent.getStringExtra("content")
+                    updateTestResultAction.value = result
+                    currentPingResultAction.value = result
                 }
 
                 AppConfig.MSG_MEASURE_CONFIG_SUCCESS -> {

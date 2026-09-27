@@ -10,7 +10,7 @@
     <color name="v2box_selected">#003845</color>
     <color name="v2box_success">#078368</color>
     <color name="v2box_control">#353537</color>
-    <color name="color_fab_active">#157596</color>
+    <color name="color_fab_active">#2DD565</color>
     <color name="color_fab_inactive">#646464</color>
     <color name="divider_color_light">#424242</color>
 
@@ -20,11 +20,11 @@
     <color name="md_theme_primaryContainer">#474747</color>
     <color name="md_theme_onPrimaryContainer">#E0E0E0</color>
 
-    <!-- Secondary colors - accent color: orange -->
+    <!-- Secondary colors - blue accent -->
     <color name="md_theme_secondary">#64D4E7</color>
-    <color name="md_theme_onSecondary">#4E2600</color>
-    <color name="md_theme_secondaryContainer">#6F3800</color>
-    <color name="md_theme_onSecondaryContainer">#FFE8D6</color>
+    <color name="md_theme_onSecondary">#003746</color>
+    <color name="md_theme_secondaryContainer">#153D52</color>
+    <color name="md_theme_onSecondaryContainer">#D4F2FF</color>
 
     <!-- Tertiary colors - tertiary color: green -->
     <color name="md_theme_tertiary">#83D6B5</color>

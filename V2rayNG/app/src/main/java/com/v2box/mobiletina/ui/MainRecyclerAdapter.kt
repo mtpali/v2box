@@ -5,7 +5,9 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.R
@@ -61,21 +63,29 @@ class MainRecyclerAdapter(
 
             //TestResult
             val aff = MmkvManager.decodeServerAffiliationInfo(guid)
-            holder.itemMainBinding.tvTestResult.text = aff?.getTestDelayString().orEmpty()
+            holder.itemMainBinding.tvTestResult.text = if ((aff?.testDelayMillis ?: 0L) < 0L) {
+                context.getString(R.string.v2box_inactive)
+            } else aff?.getTestDelayString().orEmpty()
             holder.itemMainBinding.tvTestResult.isVisible = !holder.itemMainBinding.tvTestResult.text.isNullOrBlank()
             if ((aff?.testDelayMillis ?: 0L) < 0L) {
                 holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge_error)
+                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, android.R.color.white))
             } else {
                 holder.itemMainBinding.tvTestResult.setBackgroundResource(R.drawable.v2box_ping_badge)
+                holder.itemMainBinding.tvTestResult.setTextColor(ContextCompat.getColor(context, android.R.color.white))
             }
 
             //layoutIndicator
             if (guid == MmkvManager.getSelectServer()) {
-                holder.itemMainBinding.infoContainer.setBackgroundResource(R.drawable.v2box_node_selected)
+                holder.itemMainBinding.root.strokeWidth = (2 * context.resources.displayMetrics.density).toInt()
+                holder.itemMainBinding.root.setCardBackgroundColor(ContextCompat.getColor(context, R.color.v2box_selected))
                 holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.drawable.v2box_protocol_selected)
+                holder.itemMainBinding.tvType.setTextColor(ContextCompat.getColor(context, R.color.md_theme_onPrimary))
             } else {
-                holder.itemMainBinding.infoContainer.setBackgroundResource(R.drawable.v2box_node_background)
+                holder.itemMainBinding.root.strokeWidth = 0
+                holder.itemMainBinding.root.setCardBackgroundColor(ContextCompat.getColor(context, R.color.v2box_node))
                 holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.drawable.v2box_protocol_normal)
+                holder.itemMainBinding.tvType.setTextColor(ContextCompat.getColor(context, R.color.v2box_accent))
             }
 
             //subscription remarks
@@ -113,6 +123,13 @@ class MainRecyclerAdapter(
 
             holder.itemMainBinding.infoContainer.setOnClickListener {
                 adapterListener?.onSelectServer(guid)
+            }
+            holder.itemMainBinding.infoContainer.setOnLongClickListener {
+                AlertDialog.Builder(context)
+                    .setMessage(profile.remarks)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+                true
             }
         }
 
@@ -181,8 +198,8 @@ class MainRecyclerAdapter(
     }
 
     fun setSelectServer(fromPosition: Int, toPosition: Int) {
-        notifyItemChanged(fromPosition)
-        notifyItemChanged(toPosition)
+        if (fromPosition in data.indices) notifyItemChanged(fromPosition)
+        if (toPosition in data.indices) notifyItemChanged(toPosition)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

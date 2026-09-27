@@ -1,6 +1,9 @@
 package com.v2box.mobiletina.ui
 
 import android.content.Intent
+import android.app.ActivityManager
+import android.app.Dialog
+import android.content.Context
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.net.TrafficStats
@@ -14,11 +17,11 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -30,6 +33,7 @@ import com.v2box.mobiletina.AppConfig
 import com.v2box.mobiletina.R
 import com.v2box.mobiletina.core.CoreServiceManager
 import com.v2box.mobiletina.databinding.ActivityMainBinding
+import com.v2box.mobiletina.databinding.DialogShareSubscriptionBinding
 import com.v2box.mobiletina.databinding.LayoutV2boxGroupCardBinding
 import com.v2box.mobiletina.dto.GroupMapItem
 import com.v2box.mobiletina.dto.TestServiceMessage
@@ -45,7 +49,9 @@ import com.v2box.mobiletina.handler.SubscriptionUpdater
 import com.v2box.mobiletina.handler.V2BoxSubscriptionInfo
 import com.v2box.mobiletina.util.LogUtil
 import com.v2box.mobiletina.util.InstagramLink
+import com.v2box.mobiletina.util.SocialVault
 import com.v2box.mobiletina.util.MessageUtil
+import com.v2box.mobiletina.util.QRCodeDecoder
 import com.v2box.mobiletina.util.Utils
 import com.v2box.mobiletina.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,10 +60,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.isActive
-import java.text.DateFormat
-import java.util.Date
-import java.util.UUID
 
 class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val binding by lazy {
@@ -72,6 +76,11 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     private var connectedAt = 0L
     private var uploadedAt = 0L
     private var downloadedAt = 0L
+    private var waitingForStatusPing = false
+    private var subscriptionRefreshing = false
+    private var subscriptionIdsBeforeEditor: Set<String>? = null
+    private var firstLaunchPromoDialog: Dialog? = null
+    private val primarySocialAccount by lazy { Uri.parse(SocialVault.a(0)).lastPathSegment.orEmpty() }
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) {
@@ -85,8 +94,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             restartV2Ray()
         }
         if (SettingsChangeManager.consumeSetupGroupTab()) {
+            selectNewSubscription(subscriptionIdsBeforeEditor)
             setupGroupTab()
         }
+        subscriptionIdsBeforeEditor = null
     }
 
 
@@ -98,7 +109,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         // setup viewpager and tablayout
         groupPagerAdapter = GroupPagerAdapter(this, emptyList())
         binding.viewPager.adapter = groupPagerAdapter
-        binding.viewPager.isUserInputEnabled = true
+        binding.viewPager.isUserInputEnabled = false
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if (groupPagerAdapter.groups.isNotEmpty()) {
@@ -114,7 +125,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.fab.setOnClickListener { handleFabAction() }
         binding.btnConnect.setOnClickListener { handleFabAction() }
         binding.layoutTest.setOnClickListener { handleLayoutTestClick() }
-        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)
+        binding.tvSelectedServer.setOnClickListener {
+            val textLayout = binding.tvSelectedServer.layout
+            val lastLine = (textLayout?.lineCount ?: 0) - 1
+            if (textLayout != null && lastLine >= 0 && textLayout.getEllipsisCount(lastLine) > 0) {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.server_lab_remarks)
+                    .setMessage(binding.tvSelectedServer.text)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            } else {
+                handleLayoutTestClick()
+            }
+        }
+        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)
         binding.switchSmart.setOnCheckedChangeListener { _, enabled ->
             MmkvManager.encodeSettings(AppConfig.PREF_SMART_CONNECT, enabled)
             binding.switchSmartSettings.isChecked = enabled
@@ -140,30 +164,32 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         binding.btnPingAll.setOnClickListener { mainViewModel.testAllRealPing() }
         binding.btnSortPing.setOnClickListener { sortByTestResults() }
-        binding.rowLanguage.setOnClickListener { openAdvancedSettings() }
-        binding.rowSubscriptionInfo.setOnClickListener {
-            requestActivityLauncher.launch(Intent(this, SubSettingActivity::class.java))
+        binding.rowLanguage.setOnClickListener {
+            showQuickSettingChoices(
+                R.string.title_language, R.array.language_select, R.array.language_select_value,
+                AppConfig.PREF_LANGUAGE, SettingsManager.getLocale().language
+            )
         }
-        binding.rowTunnel.setOnClickListener { openAdvancedSettings() }
-        binding.rowDns.setOnClickListener { openAdvancedSettings() }
-        binding.rowRoute.setOnClickListener {
-            requestActivityLauncher.launch(Intent(this, RoutingSettingActivity::class.java))
+        binding.rowTheme.setOnClickListener {
+            showQuickSettingChoices(
+                R.string.title_pref_ui_mode_night, R.array.ui_mode_night, R.array.ui_mode_night_value,
+                AppConfig.PREF_UI_MODE_NIGHT, "0"
+            )
         }
-        binding.rowSubSettings.setOnClickListener {
-            requestActivityLauncher.launch(Intent(this, SubSettingActivity::class.java))
+        binding.rowPerAppSettings.setOnClickListener {
+            requestActivityLauncher.launch(Intent(this, PerAppProxyActivity::class.java))
         }
-        binding.rowSpeed.setOnClickListener { openAdvancedSettings() }
+        binding.rowAdvancedSettings.setOnClickListener { openAdvancedSettings() }
         binding.rowAbout.setOnClickListener { startActivity(Intent(this, AboutActivity::class.java)) }
-        val deviceId = MmkvManager.decodeSettingsString("v2box_device_id")
-            ?.takeIf { it.isNotBlank() } ?: UUID.randomUUID().toString().also {
-                MmkvManager.encodeSettings("v2box_device_id", it)
-            }
-        binding.tvDeviceId.text = "${getString(R.string.v2box_device_id)}: $deviceId"
-        binding.tvDeviceId.setOnClickListener { Utils.setClipboard(this, deviceId) }
-        binding.btnRouting.setOnClickListener {
-            requestActivityLauncher.launch(Intent(this, RoutingSettingActivity::class.java))
-        }
         binding.btnInstagram.setOnClickListener { InstagramLink.open(this) }
+        val socialLabel = SocialVault.a(22) + " " +
+            Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
+        binding.tvInstagram.text = if (SettingsManager.getLocale().language == "fa")
+            SocialVault.a(18) else socialLabel
+        binding.rowAbout.text = SocialVault.a(if (SettingsManager.getLocale().language == "fa") 18 else 19)
+        binding.navView.menu.findItem(R.id.about)?.title = binding.rowAbout.text
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.tv_nav_brand).text =
+            Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
         binding.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -214,24 +240,37 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SUB_UPDATE_ON_START, true) &&
             MmkvManager.decodeSubscriptions().any { it.subscription.enabled && it.subscription.url.isNotBlank() }
         ) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                AngConfigManager.updateConfigViaSubAll()
-                withContext(Dispatchers.Main) {
+            subscriptionRefreshing = true
+            lifecycleScope.launch {
+                try {
+                    withContext(Dispatchers.IO) { AngConfigManager.updateConfigViaSubAll() }
                     setupGroupTab()
                     mainViewModel.reloadServerList()
                     refreshSubscriptionInfo()
+                } catch (error: Exception) {
+                    LogUtil.e(AppConfig.TAG, "Subscription startup refresh failed", error)
+                } finally {
+                    subscriptionRefreshing = false
                 }
             }
         }
 
-        checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) {
+        binding.root.post {
+            if (isFinishing || isDestroyed) return@post
+            firstLaunchPromoDialog = MobileTinaFirstLaunchDialog.showOnce(this) {
+                firstLaunchPromoDialog = null
+                if (!isFinishing && !isDestroyed) {
+                    checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) { }
+                }
+            }
+            if (firstLaunchPromoDialog == null) {
+                checkAndRequestPermission(PermissionType.POST_NOTIFICATIONS) { }
+            }
         }
     }
 
     private fun setupNavigationDrawer() {
-        binding.toolbar.setNavigationIcon(R.drawable.ic_scan_24dp)
-        binding.toolbar.navigationIcon?.setTint(ContextCompat.getColor(this, R.color.v2box_accent))
-        binding.toolbar.setNavigationOnClickListener { importQRcode() }
+        binding.btnScanQr.setOnClickListener { importQRcode() }
         binding.navView.setNavigationItemSelectedListener(this)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -251,12 +290,40 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         requestActivityLauncher.launch(Intent(this, SettingsActivity::class.java))
     }
 
+    private fun showQuickSettingChoices(
+        titleRes: Int, entriesRes: Int, valuesRes: Int, key: String, defaultValue: String
+    ) {
+        val entries = resources.getTextArray(entriesRes)
+        val values = resources.getStringArray(valuesRes)
+        val selected = values.indexOf(MmkvManager.decodeSettingsString(key, defaultValue))
+        AlertDialog.Builder(this)
+            .setTitle(titleRes)
+            .setSingleChoiceItems(entries, selected) { dialog, index ->
+                dialog.dismiss()
+                val newValue = values[index]
+                if (newValue != MmkvManager.decodeSettingsString(key, defaultValue)) {
+                    MmkvManager.encodeSettings(key, newValue)
+                    if (key == AppConfig.PREF_UI_MODE_NIGHT) SettingsManager.setNightMode()
+                    if (key == AppConfig.PREF_LANGUAGE) recreate()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
     private fun updateConnectButtonLabel() {
         binding.btnConnect.setText(if (binding.switchSmart.isChecked) R.string.v2box_smart_button else R.string.v2box_connect)
+        binding.btnConnect.contentDescription = binding.btnConnect.text
     }
 
     private fun setupViewModel() {
         mainViewModel.updateTestResultAction.observe(this) { setTestState(it) }
+        mainViewModel.currentPingResultAction.observe(this) { result ->
+            if (waitingForStatusPing && mainViewModel.isRunning.value == true && result.isNotBlank()) {
+                waitingForStatusPing = false
+                binding.tvHomeStatus.text = result.lineSequence().first().trim()
+            }
+        }
         mainViewModel.isRunning.observe(this) { isRunning ->
             applyRunningState(false, isRunning)
         }
@@ -271,7 +338,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         tabMediator?.detach()
         tabMediator = TabLayoutMediator(binding.tabGroup, binding.viewPager) { tab, position ->
             groupPagerAdapter.groups.getOrNull(position)?.let {
-                tab.text = it.remarks
+                tab.text = displayGroupRemarks(it)
                 tab.tag = it.id
             }
         }.also { it.attach() }
@@ -284,25 +351,39 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         refreshGroupTabTitles(true)
     }
 
+    /** Switch away from an empty Local list only when a new subscription is added. */
+    private fun emptyLocalIsShowing(): Boolean =
+        MmkvManager.decodeServerList(AppConfig.DEFAULT_SUBSCRIPTION_ID).isEmpty() &&
+            groupPagerAdapter.groups.getOrNull(binding.viewPager.currentItem)?.id == AppConfig.DEFAULT_SUBSCRIPTION_ID
+
+    private fun selectNewSubscription(previousIds: Set<String>?) {
+        if (previousIds == null) return
+        MmkvManager.decodeSubscriptions().firstOrNull {
+            it.guid != AppConfig.DEFAULT_SUBSCRIPTION_ID && it.guid !in previousIds
+        }?.let { mainViewModel.subscriptionIdChanged(it.guid) }
+    }
+
     private fun renderGroupCards(groups: List<GroupMapItem>) {
         binding.groupCards.removeAllViews()
         groups.forEachIndexed { index, group ->
             val card = LayoutV2boxGroupCardBinding.inflate(layoutInflater, binding.groupCards, false)
             val count = if (group.id.isEmpty()) MmkvManager.decodeAllServerList().size
                 else MmkvManager.decodeServerList(group.id).size
-            card.groupTitle.text = "${group.remarks} ($count)"
+            card.groupTitle.text = "${displayGroupRemarks(group)} ($count)"
             card.groupIcon.text = if (group.id == AppConfig.DEFAULT_SUBSCRIPTION_ID) "⌄" else "↻"
             val sub = MmkvManager.decodeSubscription(group.id)
             val details = mutableListOf<String>()
             sub?.let { item ->
                 val total = item.trafficTotalBytes ?: 0L
                 val remaining = V2BoxSubscriptionInfo.remainingBytes(item)
-                if (total > 0L && remaining != null) {
-                    val used = total - remaining
-                    card.groupProgress.isVisible = true
-                    card.groupProgress.progress = ((used.toDouble() / total) * 100).toInt().coerceIn(0, 100)
-                    details += getString(R.string.v2box_group_usage,
-                        Formatter.formatShortFileSize(this, used), Formatter.formatShortFileSize(this, total))
+                if (remaining != null) {
+                    if (total > 0L) {
+                        val used = total - remaining
+                        card.groupProgress.isVisible = true
+                        card.groupProgress.progress = ((used.toDouble() / total) * 100).toInt().coerceIn(0, 100)
+                    }
+                    details += getString(R.string.v2box_remaining,
+                        Formatter.formatShortFileSize(this, remaining))
                 }
                 item.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
                     val days = ((epoch - System.currentTimeMillis() / 1_000L)
@@ -310,7 +391,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     details += getString(R.string.v2box_days_remaining, days)
                 }
             }
-            card.groupSummary.text = details.joinToString("  ·  ").ifBlank { getString(R.string.v2box_no_info) }
+            card.groupSummary.text = details.joinToString("  ·  ").ifBlank {
+                SocialVault.a(22) + " " +
+                    Uri.parse(SocialVault.a(1)).lastPathSegment.orEmpty()
+            }
             card.root.strokeWidth = if (index == binding.viewPager.currentItem) resources.displayMetrics.density.toInt().coerceAtLeast(1) else 0
             card.root.strokeColor = ContextCompat.getColor(this, R.color.v2box_accent)
             card.root.setOnClickListener {
@@ -326,10 +410,61 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                 renderGroupCards(groups)
             }
             card.groupMore.setOnClickListener {
-                requestActivityLauncher.launch(Intent(this, SubSettingActivity::class.java))
+                showSubscriptionActions(group)
             }
+            card.groupMore.isVisible = group.id != AppConfig.DEFAULT_SUBSCRIPTION_ID && group.id.isNotEmpty()
             binding.groupCards.addView(card.root)
         }
+    }
+
+    private fun displayGroupRemarks(group: GroupMapItem): String =
+        if (group.remarks.equals(primarySocialAccount, ignoreCase = true))
+            SocialVault.a(if (SettingsManager.getLocale().language == "fa") 21 else 20)
+        else group.remarks
+
+    private fun showSubscriptionActions(group: GroupMapItem) {
+        val sub = MmkvManager.decodeSubscription(group.id) ?: return
+        val actions = arrayOf(getString(R.string.v2box_edit_subscription),
+            getString(R.string.v2box_share_subscription), getString(R.string.v2box_delete_subscription))
+        AlertDialog.Builder(this).setTitle(displayGroupRemarks(group)).setItems(actions) { _, which ->
+            when (which) {
+                0 -> requestActivityLauncher.launch(Intent(this, SubEditActivity::class.java)
+                    .putExtra("subId", group.id))
+                1 -> showSubscriptionShare(displayGroupRemarks(group), sub.url)
+                2 -> AlertDialog.Builder(this).setTitle(displayGroupRemarks(group))
+                    .setMessage(R.string.v2box_delete_subscription_confirm)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        val selected = MmkvManager.getSelectServer()
+                        if (selected != null && MmkvManager.decodeServerConfig(selected)?.subscriptionId == group.id &&
+                            mainViewModel.isRunning.value == true) CoreServiceManager.stopVService(this)
+                        SettingsManager.removeSubscriptionWithDefault(group.id)
+                        mainViewModel.subscriptionIdChanged(AppConfig.DEFAULT_SUBSCRIPTION_ID)
+                        setupGroupTab()
+                        mainViewModel.reloadServerList()
+                        refreshSubscriptionInfo()
+                    }.setNegativeButton(android.R.string.cancel, null).show()
+            }
+        }.show()
+    }
+
+    private fun showSubscriptionShare(title: String, url: String) {
+        if (url.isBlank()) {
+            toastError(R.string.toast_invalid_url)
+            return
+        }
+        val qrCode = QRCodeDecoder.createQRCode(url, 512) ?: run {
+            toastError(R.string.toast_failure)
+            return
+        }
+        val share = DialogShareSubscriptionBinding.inflate(layoutInflater)
+        share.subscriptionQr.setImageBitmap(qrCode)
+        share.subscriptionUrl.text = url
+        share.copySubscriptionUrl.setOnClickListener {
+            Utils.setClipboard(this, url)
+            toast(R.string.v2box_link_copied)
+        }
+        AlertDialog.Builder(this).setTitle(title).setView(share.root)
+            .setPositiveButton(android.R.string.ok, null).show()
     }
 
     fun refreshGroupTabTitles(refreshAll: Boolean = false) {
@@ -346,7 +481,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             val tabIndex = groupPagerAdapter.groups.indexOfFirst { it.id == group.id }
             if (tabIndex >= 0) {
                 val count = MmkvManager.decodeServerList(group.id).size
-                binding.tabGroup.getTabAt(tabIndex)?.text = "${group.remarks} ($count)"
+                binding.tabGroup.getTabAt(tabIndex)?.text = "${displayGroupRemarks(group)} ($count)"
             }
         }
         renderGroupCards(groupPagerAdapter.groups)
@@ -360,7 +495,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         if (mainViewModel.isRunning.value == true) {
             CoreServiceManager.stopVService(this)
-        } else if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)) {
+        } else if (MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)) {
             smartConnectAndStart()
         } else {
             startSelectedServer()
@@ -403,7 +538,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             key = AppConfig.MSG_MEASURE_CONFIG_START, serverGuids = guids
         ))
         smartConnectJob = lifecycleScope.launch {
-            binding.btnConnect.setText(R.string.v2box_choosing)
+            binding.btnConnect.setText(R.string.v2box_choosing_button)
+            binding.btnConnect.contentDescription = getString(R.string.v2box_choosing)
             var started = false
             try {
                 var firstPositiveAt = 0L
@@ -435,6 +571,10 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             } finally {
                 MessageUtil.sendMsg2TestService(this@MainActivity,
                     TestServiceMessage(key = AppConfig.MSG_MEASURE_CONFIG_CANCEL))
+                if (started && MmkvManager.decodeSettingsBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, true)) {
+                    withContext(NonCancellable + Dispatchers.IO) { mainViewModel.sortByTestResults() }
+                    mainViewModel.reloadServerList()
+                }
                 smartConnectJob = null
                 if (!started && mainViewModel.isRunning.value != true) applyRunningState(false, false)
             }
@@ -443,7 +583,8 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
     private fun handleLayoutTestClick() {
         if (mainViewModel.isRunning.value == true) {
-            setTestState(getString(R.string.connection_test_testing))
+            waitingForStatusPing = true
+            binding.tvHomeStatus.setText(R.string.connection_test_testing)
             mainViewModel.testCurrentServerRealPing()
         } else {
             // service not running: keep existing no-op (could show a message if desired)
@@ -495,15 +636,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             binding.tvHomeStatus.setText(R.string.connection_connected)
             binding.fab.setImageResource(R.drawable.ic_stop_24dp)
             binding.fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
+            binding.btnConnect.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_active))
+            binding.btnConnect.setTextColor(ContextCompat.getColor(this, R.color.v2box_connected_text))
             binding.fab.contentDescription = getString(R.string.action_stop_service)
             setTestState(getString(R.string.connection_connected))
             binding.layoutTest.isFocusable = true
         } else {
             connectedAt = 0L
+            waitingForStatusPing = false
             updateConnectButtonLabel()
             binding.tvHomeStatus.setText(R.string.connection_not_connected)
             binding.fab.setImageResource(R.drawable.ic_play_24dp)
             binding.fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_inactive))
+            binding.btnConnect.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.v2box_control))
+            binding.btnConnect.setTextColor(ContextCompat.getColor(this, R.color.v2box_text))
             binding.fab.contentDescription = getString(R.string.tasker_start_service)
             setTestState(getString(R.string.connection_not_connected))
             binding.layoutTest.isFocusable = false
@@ -513,7 +659,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     override fun onResume() {
         super.onResume()
         refreshSelectedServer()
-        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, true)
+        binding.switchSmart.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SMART_CONNECT, false)
         binding.switchAutoSort.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_AUTO_SORT_AFTER_TEST, true)
         binding.switchSubUpdate.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_SUB_UPDATE_ON_START, true)
         refreshSubscriptionInfo()
@@ -564,9 +710,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                     Formatter.formatShortFileSize(this, remaining))
             }
             item.expireEpochSeconds?.takeIf { it > 0L }?.let { epoch ->
-                val date = DateFormat.getDateInstance(DateFormat.MEDIUM, SettingsManager.getLocale())
-                    .format(Date(epoch.coerceAtMost(Long.MAX_VALUE / 1_000) * 1_000))
-                parts += getString(R.string.v2box_expiration, date)
                 val days = ((epoch - System.currentTimeMillis() / 1_000)
                     .coerceAtLeast(0L) + 86_399L) / 86_400L
                 parts += getString(R.string.v2box_days_remaining, days)
@@ -576,11 +719,11 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         binding.tvSubscription.text = parts.joinToString("\n")
     }
 
-    private fun refreshSelectedServer() {
+    fun refreshSelectedServer() {
         val selected = MmkvManager.getSelectServer()?.let { MmkvManager.decodeServerConfig(it) }
         binding.tvSelectedServer.text = selected?.remarks?.takeIf { it.isNotBlank() }
             ?: getString(R.string.v2box_no_server)
-        binding.tvSelectedServer.isVisible = selected != null
+        binding.tvSelectedServer.isVisible = selected != null && SettingsManager.getLocale().language != "fa"
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -592,23 +735,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        val searchItem = menu.findItem(R.id.search_view)
-        if (searchItem != null) {
-            val searchView = searchItem.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean = false
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    mainViewModel.filterConfig(newText.orEmpty())
-                    return false
-                }
-            })
-
-            searchView.setOnCloseListener {
-                mainViewModel.filterConfig("")
-                false
-            }
-        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -619,6 +745,13 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
         }
         R.id.import_qrcode -> {
             importQRcode()
+            true
+        }
+
+        R.id.add_subscription -> {
+            subscriptionIdsBeforeEditor = if (emptyLocalIsShowing())
+                MmkvManager.decodeSubscriptions().map { it.guid }.toSet() else null
+            requestActivityLauncher.launch(Intent(this, SubEditActivity::class.java))
             true
         }
 
@@ -693,11 +826,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             true
         }
 
-        R.id.service_restart -> {
-            restartV2Ray()
-            true
-        }
-
         R.id.del_all_config -> {
             delAllConfig()
             true
@@ -720,11 +848,6 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
 
         R.id.sub_update -> {
             importConfigViaSub()
-            true
-        }
-
-        R.id.locate_selected_config -> {
-            locateSelectedServer()
             true
         }
 
@@ -782,13 +905,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun importBatchConfig(server: String?) {
+        val importGroupId = mainViewModel.subscriptionId
+        val previousIds = if (emptyLocalIsShowing())
+            MmkvManager.decodeSubscriptions().map { it.guid }.toSet() else null
         showLoading()
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val (count, countSub) = AngConfigManager.importBatchConfig(server, mainViewModel.subscriptionId, true)
+                val (count, countSub) = AngConfigManager.importBatchConfig(server, importGroupId, true)
                 delay(500L)
                 withContext(Dispatchers.Main) {
+                    if (countSub > 0) {
+                        selectNewSubscription(previousIds)
+                        setupGroupTab()
+                    }
                     when {
                         count > 0 -> {
                             toast(getString(R.string.title_import_config_count, count))
@@ -796,7 +926,7 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                             refreshGroupTabTitles()
                         }
 
-                        countSub > 0 -> setupGroupTab()
+                        countSub > 0 -> Unit
                         else -> toastError(R.string.toast_failure)
                     }
                     hideLoading()
@@ -828,13 +958,17 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
     /**
      * import config from sub
      */
-    fun importConfigViaSub(): Boolean {
+    fun importConfigViaSub(onFinished: (() -> Unit)? = null): Boolean {
+        if (subscriptionRefreshing) {
+            onFinished?.invoke()
+            return false
+        }
+        subscriptionRefreshing = true
         showLoading()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = mainViewModel.updateConfigViaSubAll()
-            delay(500L)
-            launch(Dispatchers.Main) {
+        lifecycleScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) { mainViewModel.updateConfigViaSubAll() }
                 if (result.successCount + result.failureCount + result.skipCount == 0) {
                     toast(R.string.title_update_subscription_no_subscription)
                 } else if (result.successCount > 0 && result.failureCount + result.skipCount == 0) {
@@ -847,11 +981,20 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
                         )
                     )
                 }
-                if (result.configCount > 0) {
+                if (result.successCount > 0) {
+                    setupGroupTab()
                     mainViewModel.reloadServerList()
-                    refreshGroupTabTitles()
+                } else {
+                    refreshGroupTabTitles(true)
                 }
+                refreshSubscriptionInfo()
+            } catch (error: Exception) {
+                LogUtil.e(AppConfig.TAG, "Subscription refresh failed", error)
+                toastError(R.string.toast_failure)
+            } finally {
+                subscriptionRefreshing = false
                 hideLoading()
+                onFinished?.invoke()
             }
         }
         return true
@@ -1026,18 +1169,29 @@ class MainActivity : HelperBaseActivity(), NavigationView.OnNavigationItemSelect
             R.id.routing_setting -> requestActivityLauncher.launch(Intent(this, RoutingSettingActivity::class.java))
             R.id.user_asset_setting -> requestActivityLauncher.launch(Intent(this, UserAssetActivity::class.java))
             R.id.settings -> requestActivityLauncher.launch(Intent(this, SettingsActivity::class.java))
-            R.id.promotion -> InstagramLink.open(this)
-            R.id.logcat -> startActivity(Intent(this, LogcatActivity::class.java))
-            R.id.check_for_update -> startActivity(Intent(this, CheckUpdateActivity::class.java))
             R.id.backup_restore -> requestActivityLauncher.launch(Intent(this, BackupActivity::class.java))
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.clear_app -> confirmClearApp()
         }
 
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
+    private fun confirmClearApp() {
+        AlertDialog.Builder(this).setTitle(R.string.v2box_clear_app)
+            .setMessage(R.string.v2box_clear_app_confirm)
+            .setPositiveButton(R.string.v2box_clear_app) { _, _ ->
+                if (mainViewModel.isRunning.value == true) CoreServiceManager.stopVService(this)
+                val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                if (!manager.clearApplicationUserData()) toastError(R.string.toast_failure)
+            }.setNegativeButton(android.R.string.cancel, null).show()
+    }
+
     override fun onDestroy() {
+        firstLaunchPromoDialog?.setOnDismissListener(null)
+        firstLaunchPromoDialog?.dismiss()
+        firstLaunchPromoDialog = null
         tabMediator?.detach()
         super.onDestroy()
     }

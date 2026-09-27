@@ -7,6 +7,7 @@ import androidx.work.WorkManager
 import com.tencent.mmkv.MMKV
 import com.v2box.mobiletina.AppConfig.ANG_PACKAGE
 import com.v2box.mobiletina.handler.SettingsManager
+import com.v2box.mobiletina.util.ApkIntegrity
 
 class AngApplication : MultiDexApplication() {
     companion object {
@@ -31,6 +32,7 @@ class AngApplication : MultiDexApplication() {
      */
     override fun onCreate() {
         super.onCreate()
+        ApkIntegrity.verify(this)
 
         MMKV.initialize(this)
 
